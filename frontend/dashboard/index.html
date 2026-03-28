@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RapidAid Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">RapidAid</div>
+        <nav>
+            <a href="#" class="active">Dashboard</a>
+            <a href="#">Reports</a>
+            <a href="#">Resources</a>
+            <a href="#">Agency</a>
+        </nav>
+        <div class="header-actions">
+            <button class="btn-login">Login</button>
+            <button class="icon-btn">🔔</button>
+            <button class="icon-btn">⚙️</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="bg-overlay">
+            <div class="radar-circle"></div>
+        </div>
+        <div class="bg-text">EMERGENCY MAP</div>
+
+        <div class="location-card">
+            <div class="loc-header">
+                <div class="loc-icon">◎</div>
+                <div class="loc-details">
+                    <h4>Verified Location</h4>
+                    <p>San Francisco, CA 94103</p>
+                </div>
+            </div>
+            <div class="signal-bar">
+                <div class="signal-fill"></div>
+            </div>
+            <p class="signal-text">Signal strength: Strong (High Precision)</p>
+        </div>
+
+        <div class="emergency-modal">
+            <h1 class="modal-title">Emergency Assistance</h1>
+            <p class="modal-subtitle">Select the service you require for immediate dispatch.</p>
+
+            <div class="service-options">
+                <button class="service-btn" data-service="ambulance">
+                    <div class="icon-wrapper">🚑</div>
+                    <span>Ambulance</span>
+                </button>
+                <button class="service-btn" data-service="fire">
+                    <div class="icon-wrapper">🔥</div>
+                    <span>Fire Dept</span>
+                </button>
+                <button class="service-btn" data-service="police">
+                    <div class="icon-wrapper">🚓</div>
+                    <span>Police</span>
+                </button>
+            </div>
+
+            <div class="input-group">
+                <label>Describe Situation (Optional)</label>
+                <textarea placeholder="E.g. Accident at the intersection of 5th and Main..."></textarea>
+            </div>
+
+            <button class="btn-submit">
+                <span>📍</span> Submit Emergency
+            </button>
+
+            <div class="location-notice">
+                <span>📌</span> Your location will be shared with responders.
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Agency Portal</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="copyright">
+            <strong>RapidAid</strong> | &copy; 2024 RapidAid. The Serene Guardian.
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
