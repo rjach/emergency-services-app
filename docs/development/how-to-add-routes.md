@@ -33,7 +33,7 @@ Import and use the route file inside `src/routes/index.js`.
 Use Postman or frontend `fetch`:
 
 ```js
-fetch('http://localhost:5000/api/incidents')
+fetch("http://localhost:8848/api/incidents")
   .then((response) => response.json())
   .then((data) => console.log(data));
 ```

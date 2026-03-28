@@ -36,7 +36,7 @@ Follow:
 
 When backend is working, this URL should open in browser:
 
-- <http://localhost:5000/api/health>
+- <http://localhost:8848/api/health>
 
 ## 5) Set up frontend
 

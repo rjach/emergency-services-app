@@ -36,9 +36,13 @@ cp .env.example .env
 Now open `.env` and verify values:
 
 ```env
-PORT=5000
+PORT=8848
 MONGODB_URI=mongodb://127.0.0.1:27017/emergency_services_app
+JWT_SECRET=your-long-random-secret
+JWT_EXPIRES_IN=7d
 ```
+
+`JWT_SECRET` is required: the server exits on startup if it is missing. Use a long random string in production (for example `openssl rand -hex 32`).
 
 ## 5) Start MongoDB
 
@@ -59,13 +63,13 @@ npm run dev
 Expected logs:
 
 - `MongoDB connected successfully`
-- `Backend server running on http://localhost:5000`
+- `Backend server running on http://localhost:8848`
 
 ## 7) Test backend API in browser
 
 Open:
 
-- <http://localhost:5000/api/health>
+- <http://localhost:8848/api/health>
 
 Expected JSON response with `success: true`.
 
@@ -73,7 +77,7 @@ Expected JSON response with `success: true`.
 
 1. Open Postman
 2. Method: `GET`
-3. URL: `http://localhost:5000/api/health`
+3. URL: `http://localhost:8848/api/health`
 4. Click **Send**
 5. Verify JSON response
 
@@ -97,5 +101,5 @@ In the terminal where backend is running, press:
 
 ### Port already in use
 
-- Another app uses port `5000`
+- Another app uses port `8848`
 - Change `PORT` in `.env` to `5001`, then restart
