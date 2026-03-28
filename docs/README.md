@@ -10,8 +10,9 @@ This documentation is written for absolute beginners. If you are new to coding, 
 4. `docs/development/backend-setup.md`
 5. `docs/guides/frontend-setup.md`
 6. `docs/guides/frontend-api-testing.md`
-7. `docs/reference/database-model-guide.md`
-8. `docs/development/how-to-add-routes.md`
+7. `docs/auth-flow.md` — sign-up, sign-in, JWT session, guest mode, frontend integration
+8. `docs/reference/database-model-guide.md`
+9. `docs/development/how-to-add-routes.md`
 
 ## Documentation Map
 

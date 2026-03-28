@@ -3,17 +3,239 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Emergency Services App</title>
+    <meta name="api-base" content="http://localhost:8848" />
+    <title>RapidAid — Sign in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./style.css" />
   </head>
-  <body>
-    <main class="container">
-      <h1>Emergency Services Frontend</h1>
-      <p>This is a plain HTML/CSS/JS starter.</p>
-      <button id="health-check-btn">Check Backend Health</button>
-      <pre id="output">No request made yet.</pre>
+  <body class="page-auth">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <main class="login-main">
+      <header class="brand">
+        <h1 class="brand-title">RapidAid</h1>
+        <p class="brand-tagline">The Serene Guardian</p>
+      </header>
+
+      <div class="auth-card">
+        <div class="segmented" role="tablist" aria-label="Account type">
+          <button
+            type="button"
+            class="seg-btn seg-btn-active"
+            id="mode-user"
+            role="tab"
+            aria-selected="true"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true"
+              >person</span
+            >
+            User
+          </button>
+          <button
+            type="button"
+            class="seg-btn"
+            id="mode-agency"
+            role="tab"
+            aria-selected="false"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true"
+              >corporate_fare</span
+            >
+            Agency Admin
+          </button>
+        </div>
+
+        <div
+          class="segmented segmented-sub"
+          role="tablist"
+          aria-label="Auth action"
+        >
+          <button
+            type="button"
+            class="seg-btn-sub seg-btn-sub-active"
+            id="auth-login"
+            role="tab"
+            aria-selected="true"
+          >
+            Login
+          </button>
+          <button
+            type="button"
+            class="seg-btn-sub"
+            id="auth-signup"
+            role="tab"
+            aria-selected="false"
+          >
+            Sign Up
+          </button>
+        </div>
+
+        <p id="auth-error" class="auth-error" role="alert" hidden></p>
+        <p id="auth-loading" class="auth-loading" hidden>Working…</p>
+
+        <form id="form-auth" class="auth-form" novalidate>
+          <div id="signup-fields" class="signup-fields" hidden>
+            <div id="field-agency-name" class="field-group" hidden>
+              <label class="label" for="agency-name">Agency Name</label>
+              <div class="input-wrap">
+                <span
+                  class="material-symbols-outlined input-icon"
+                  aria-hidden="true"
+                  >apartment</span
+                >
+                <input
+                  id="agency-name"
+                  name="agencyName"
+                  class="input"
+                  type="text"
+                  placeholder="Emergency Services Co."
+                  autocomplete="organization"
+                />
+              </div>
+            </div>
+
+            <div id="field-phone" class="field-group">
+              <label class="label" for="phone">Phone Number</label>
+              <div class="input-wrap">
+                <span
+                  class="material-symbols-outlined input-icon"
+                  aria-hidden="true"
+                  >call</span
+                >
+                <input
+                  id="phone"
+                  name="phone"
+                  class="input"
+                  type="tel"
+                  placeholder="+1 (555) 000-0000"
+                  autocomplete="tel"
+                />
+              </div>
+            </div>
+
+            <div id="agency-extra" hidden>
+              <div class="field-group">
+                <label class="label" for="service-type">Service Type</label>
+                <div class="input-wrap">
+                  <span
+                    class="material-symbols-outlined input-icon"
+                    aria-hidden="true"
+                    >medical_services</span
+                  >
+                  <select
+                    id="service-type"
+                    name="serviceType"
+                    class="input input-select"
+                  >
+                    <option value="" disabled selected>
+                      Select service type
+                    </option>
+                    <option value="medical">Medical Response</option>
+                    <option value="fire">Fire Department</option>
+                    <option value="police">Law Enforcement</option>
+                    <option value="rescue">Search &amp; Rescue</option>
+                    <option value="disaster">Disaster Relief</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="label" for="address">Address</label>
+                <div class="input-wrap">
+                  <span
+                    class="material-symbols-outlined input-icon"
+                    aria-hidden="true"
+                    >location_on</span
+                  >
+                  <input
+                    id="address"
+                    name="address"
+                    class="input"
+                    type="text"
+                    placeholder="123 Response Way, Central City"
+                    autocomplete="street-address"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="label" for="email">Email</label>
+            <div class="input-wrap">
+              <span
+                class="material-symbols-outlined input-icon"
+                aria-hidden="true"
+                >mail</span
+              >
+              <input
+                id="email"
+                name="email"
+                class="input"
+                type="email"
+                required
+                placeholder="name@example.com"
+                autocomplete="email"
+              />
+            </div>
+          </div>
+
+          <div class="field-group">
+            <div class="label-row">
+              <label class="label" for="password">Password</label>
+              <a href="#" class="link-forgot" id="link-forgot" hidden
+                >Forgot?</a
+              >
+            </div>
+            <div class="input-wrap">
+              <span
+                class="material-symbols-outlined input-icon"
+                aria-hidden="true"
+                >lock</span
+              >
+              <input
+                id="password"
+                name="password"
+                class="input input-password"
+                type="password"
+                required
+                placeholder="••••••••"
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                class="btn-visibility"
+                id="toggle-password"
+                aria-label="Show password"
+              >
+                <span class="material-symbols-outlined">visibility</span>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary" id="btn-submit-auth">
+            <span id="btn-submit-label">Login to Dashboard</span>
+            <span class="material-symbols-outlined" aria-hidden="true"
+              >arrow_forward</span
+            >
+          </button>
+        </form>
+      </div>
+
+      <p class="legal-auth">
+        By continuing, you agree to RapidAid’s <a href="#">Terms</a> and
+        <a href="#">Privacy</a>.
+      </p>
     </main>
 
-    <script src="./script.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/login.js"></script>
   </body>
 </html>

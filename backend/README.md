@@ -27,6 +27,13 @@ npm run dev
 - `npm run dev`: Run backend with auto-reload via nodemon.
 - `npm start`: Run backend with Node.js.
 
-## Starter Endpoint
+## API
 
-- `GET /api/health`
+- `GET /api/health` — liveness check
+- `POST /api/auth/signup` — register (`user` or `agency_admin`)
+- `POST /api/auth/signin` — login (role must match account)
+- `GET /api/auth/me` — current user (Bearer JWT)
+- `GET|POST /api/user/contacts` — list / create emergency contacts (**`user` role only**)
+- `PATCH|DELETE /api/user/contacts/:id` — update / delete own contact
+
+Requires `JWT_SECRET` in `.env`. See `docs/auth-flow.md` and `docs/api/overview.md`.

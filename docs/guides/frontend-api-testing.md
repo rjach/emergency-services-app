@@ -6,11 +6,11 @@ This guide explains API testing in simple steps.
 
 Backend URL:
 
-- `http://localhost:5000`
+- `http://localhost:8848`
 
 Health endpoint:
 
-- `http://localhost:5000/api/health`
+- `http://localhost:8848/api/health`
 
 ## 2) Understand request parts
 
@@ -24,7 +24,7 @@ Every frontend API call needs:
 ## 3) Basic GET example
 
 ```js
-const response = await fetch('http://localhost:5000/api/health');
+const response = await fetch("http://localhost:8848/api/health");
 const data = await response.json();
 console.log(data);
 ```
@@ -32,10 +32,10 @@ console.log(data);
 ## 4) Basic POST example
 
 ```js
-const response = await fetch('http://localhost:5000/api/example', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ name: 'test value' }),
+const response = await fetch("http://localhost:8848/api/example", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name: "test value" }),
 });
 
 const data = await response.json();
