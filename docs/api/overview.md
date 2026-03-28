@@ -2,7 +2,7 @@
 
 ## Base URL
 
-- `http://localhost:8848` (configurable via `PORT`)
+- `https://api.rapidaid.rojanacharya.com` (configurable via `PORT`)
 
 ## Health
 
@@ -141,12 +141,12 @@ Creates a contact.
 
 **Body (JSON)**
 
-| Field | Required | Notes |
-| --- | --- | --- |
-| `name` | Yes | Non-empty string |
-| `phone` | Yes | Non-empty string |
-| `relationship` | Yes | Non-empty string |
-| `notifyOnAlert` | No | Boolean; default `true` |
+| Field           | Required | Notes                   |
+| --------------- | -------- | ----------------------- |
+| `name`          | Yes      | Non-empty string        |
+| `phone`         | Yes      | Non-empty string        |
+| `relationship`  | Yes      | Non-empty string        |
+| `notifyOnAlert` | No       | Boolean; default `true` |
 
 **Success `201`** — `{ "success": true, "contact": { ... } }`
 

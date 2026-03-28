@@ -26,7 +26,7 @@ You should see the starter page with button **Check Backend Health**.
 
 ## 5) Verify frontend-backend connection
 
-1. Confirm backend is running at `http://localhost:8848`
+1. Confirm backend is running at `https://api.rapidaid.rojanacharya.com`
 2. In frontend page click **Check Backend Health**
 3. JSON should appear on page
 

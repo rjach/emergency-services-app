@@ -6,7 +6,7 @@
 
   function getApiBase() {
     const meta = document.querySelector('meta[name="api-base"]');
-    return (meta && meta.content) || "http://localhost:8848";
+    return (meta && meta.content) || "https://api.rapidaid.rojanacharya.com";
   }
 
   function getToken() {
