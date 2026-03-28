@@ -31,12 +31,8 @@ app.use(
       "X-Event-Id",
     ],
     credentials: true,
-    optionsSuccessStatus: 204,
   }),
 );
-
-// Preflight handler
-app.options("*", cors());
 
 app.use(express.json());
 app.use("/api", apiRoutes);
