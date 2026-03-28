@@ -1,5 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const connectDatabase = require("./config/database");
 const apiRoutes = require("./routes");
 
 const app = express();
@@ -35,6 +37,36 @@ app.use(
 );
 
 app.use(express.json());
+
+/** Serverless entrypoints often load `app` without running `server.js`; connect before DB-backed routes. */
+async function ensureDatabase(req, res, next) {
+  if (req.path === "/health") {
+    return next();
+  }
+  try {
+    await connectDatabase();
+    next();
+  } catch (err) {
+    console.error("MongoDB connection error:", err.message);
+    next(err);
+  }
+}
+
+app.use("/api", ensureDatabase);
 app.use("/api", apiRoutes);
+
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+  const status = err.name === "MongoServerSelectionError" ? 503 : 500;
+  res.status(status).json({
+    success: false,
+    message:
+      status === 503
+        ? "Database temporarily unavailable"
+        : "An unexpected error occurred",
+  });
+});
 
 module.exports = app;
