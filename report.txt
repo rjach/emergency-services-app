@@ -1,0 +1,356 @@
+================================================================================
+  TECHNOLOGY SELECTION REPORT (INITIAL)
+  Collaborative Development Module — Emergency Services Application
+================================================================================
+
+Submitted by:    [Your name]
+Student ID:      [If applicable]
+Module / Course: [Course code and title]
+Date submitted:  28 March 2026
+Submitted to:    [Instructor name]
+
+================================================================================
+
+
+ABSTRACT
+--------
+
+This report documents the rationale for our group’s initial technology stack
+for the emergency services application developed in the collaborative
+development module. The front end uses HTML, CSS, and JavaScript without a
+heavy client-side framework. The back end uses Node.js with Express, and
+persistence uses MongoDB (via Mongoose). The choices balance equitable
+contribution in a multi-developer group, integration with business analysis
+and project management activities required by the module, and intentional
+exposure to server-side JavaScript and document-oriented data stores. The
+report also states the intrinsic advantages of each layer, compares our
+choices to common alternatives, and lists authoritative documentation URLs
+for further reading.
+
+
+1. INTRODUCTION
+---------------
+
+The module requires our group to work as a cross-functional team: six
+developers alongside Business Analysts (BAs) and Project Managers (PMs).
+Deliverables include not only working software but also traceability between
+requirements, design artefacts, and implementation. This report explains why
+we selected our technologies so that assessment can be mapped to stated
+objectives: collaboration, clarity of design communication, and technical
+learning. Section 3 combines module-specific reasons with objective strengths
+of each technology and short comparisons so the instructor can see both our
+context and industry-standard trade-offs.
+
+
+2. LEARNING AND PROJECT CONTEXT
+-------------------------------
+
+Our constraints and objectives can be summarised as follows.
+
+  (a) Collaboration: All developers should be able to contribute early,
+      without mandatory expertise in a specific front-end framework or build
+      toolchain.
+
+  (b) Cross-role clarity: Work products from BAs and PMs (user stories,
+      acceptance criteria, process flows) should relate straightforwardly to
+      concrete pages and API behaviour, to support module reviews and
+      demonstrations.
+
+  (c) Stretch learning: We deliberately include technologies that extend
+      beyond browser-only development—specifically Node.js for the server
+      tier and MongoDB for data—so that the module produces both a shared
+      product and documented growth in back-end and data skills.
+
+
+3. TECHNOLOGY DECISIONS, ADVANTAGES, AND COMPARISONS
+----------------------------------------------------
+
+3.1  Front end: HTML, CSS, and JavaScript (vanilla; no SPA framework)
+
+Decision (module context)
+-------------------------
+We are not adopting React, Vue, Angular, or similar as the default approach
+for the initial delivery.
+
+Justification (collaboration and traceability)
+----------------------------------------------
+  • Foundational competence. HTML, CSS, and JavaScript are part of standard
+    web curricula; the full developer cohort can read, edit, and review code
+    with minimal synchronisation on framework versions and patterns.
+
+  • Group workflow. Version control and code review focus on markup,
+    styling, and script behaviour rather than framework-specific lifecycle
+    and bundling conventions, which reduces onboarding time in a six-person
+    developer group.
+
+  • Requirements traceability. Pages and forms can be tied directly to
+    documented screens and flows, which supports BA/PM alignment and
+    instructor assessment of requirement-to-implementation mapping.
+
+  • Evolution path. If scope grows, we can introduce selective tooling or
+    libraries without committing the whole UI to a framework in the first
+    phase of the module.
+
+Why these technologies are advantageous in their own right
+------------------------------------------------------------
+  • HTML (HyperText Markup Language) defines the structure and meaning of
+    content. Advantages: works in every standards-compliant browser; supports
+    accessibility when semantic elements (headings, landmarks, forms, labels)
+    are used correctly; does not require compilation; is the stable contract
+    between servers and clients for document delivery.
+
+  • CSS (Cascading Style Sheets) separates presentation from structure.
+    Advantages: consistent visual design across pages; responsive layouts
+    (media queries, flexbox, grid) without duplicating HTML; easier maintenance
+    when branding or layout rules change.
+
+  • JavaScript adds behaviour in the browser (validation, dynamic updates,
+    fetch calls to APIs). Advantages: native in all modern browsers; large,
+    well-documented standard library and Web APIs; same core language syntax
+    and types as we use on the server with Node.js, which reduces cognitive
+    load when moving between tiers.
+
+Comparison: vanilla web stack vs single-page application (SPA) frameworks
+------------------------------------------------------------------------
+  • React / Vue / Angular excel when the UI is highly interactive, component
+    reuse is extensive, and teams commit to a shared component architecture
+    and toolchain (bundler, transpiler, often TypeScript).
+
+  • For our module, a SPA stack would add mandatory learning (virtual DOM or
+    reactivity models, routing, state management) before every developer could
+    contribute equally. Build configuration and dependency upgrades also
+    become shared critical path work.
+
+  • Vanilla HTML/CSS/JS trades some developer ergonomics at very large scale
+    for immediate clarity, direct mapping from a “screen” in requirements to a
+    file in the repository, and lower coordination overhead—advantageous for
+    coursework timelines and mixed experience levels.
+
+  • We are not claiming SPAs are “worse”; we are stating that for our stated
+    goals (collaboration first, traceability, incremental complexity), the
+    classic web stack is the better fit.
+
+
+3.2  Server: Node.js with Express
+
+Decision (module context)
+-------------------------
+The server tier is implemented in Node.js, using Express to structure HTTP
+routes and middleware (consistent with our repository setup).
+
+Justification (collaboration and learning)
+------------------------------------------
+  • Language consistency. Shared use of JavaScript on client and server
+    simplifies mental models, JSON handling, and peer review across the
+    developer group.
+
+  • Industry and curriculum relevance. Node.js is widely used for REST APIs
+    and services; skills acquired here transfer to common graduate employment
+    contexts.
+
+  • Incremental delivery. Endpoints can be added in line with sprint or
+    milestone planning without imposing a large initial server architecture.
+
+Why Node.js is advantageous for this kind of project
+----------------------------------------------------
+  • Event-driven, non-blocking I/O suits many web and API workloads where
+    the server waits on network or database operations; throughput can remain
+    good under concurrent requests without dedicating one thread per
+    connection in the traditional sense.
+
+  • JSON is native to JavaScript; serialising and parsing request/response
+    bodies aligns with the language, which reduces boilerplate compared to
+    some statically typed stacks for simple CRUD APIs.
+
+  • npm (Node Package Manager) provides a very large ecosystem of libraries
+    for authentication, validation, HTTP utilities, and database drivers,
+    which supports rapid implementation within the module.
+
+Why Express (and how it compares)
+-----------------------------------
+  • Express is a minimal, unopinionated HTTP framework: routing and
+    middleware are easy to learn, and the surface area matches introductory
+    back-end courses well.
+
+  • Alternatives (for comparison only):
+      – Django / Flask (Python): excellent for batteries-included web apps
+        and Python-heavy teams; different language from our browser code.
+      – Spring Boot (Java): strong in enterprise environments; heavier
+        ceremony and JVM concepts for a short collaborative module.
+      – ASP.NET (C#): strong Microsoft ecosystem integration; again a second
+        language relative to the browser tier.
+      – Fastify or NestJS (Node): viable Node options; Express was chosen for
+        simplicity and volume of tutorials and examples.
+
+  • We chose Node + Express to keep one primary language while still using a
+    framework pattern (routes, middleware) that instructors and employers
+    recognise as “real” back-end structure.
+
+
+3.3  Data: MongoDB with Mongoose
+
+Decision (module context)
+-------------------------
+Persistent data is stored in MongoDB, accessed from Node.js using Mongoose.
+
+Justification (collaboration and learning)
+------------------------------------------
+  • Deliberate exposure to NoSQL. Relational databases remain important, but
+    document databases introduce distinct modelling concerns (embedding vs
+    referencing, schema flexibility, aggregation). We selected MongoDB to
+    gain practical experience with a mainstream document store.
+
+  • Coherence with JSON-centric APIs. Request and response bodies are
+    typically JSON; document storage supports learning how domain objects
+    persist and evolve alongside API contracts.
+
+  • Skill diversification. Group members whose prior experience is primarily
+    SQL-backed systems benefit from hands-on practice with indexing,
+    validation at the application layer, and document design trade-offs.
+
+Why MongoDB is advantageous for learning and for JSON-heavy APIs
+----------------------------------------------------------------
+  • Flexible schema (within collections) supports rapid iteration when
+    requirements change during the module; new fields can be introduced with
+    clear migration discipline rather than blocking on full relational
+    redesign for every adjustment.
+
+  • Document model maps naturally to nested structures (e.g. embedded
+    sub-documents) that would require multiple joined tables in SQL—useful
+    when teaching when to embed vs normalise.
+
+  • Rich query and aggregation APIs support reporting-style operations and
+    indexing strategies that appear in industry certifications and job
+    descriptions.
+
+Why Mongoose
+------------
+  • Mongoose provides schemas, validation hooks, and middleware on top of the
+    raw driver—helping the team enforce structure while still using MongoDB.
+
+Comparison: MongoDB (document) vs relational SQL (e.g. PostgreSQL, MySQL)
+-------------------------------------------------------------------------
+  • Relational strengths: ACID transactions across normalised tables are
+    mature; foreign keys and constraints enforce referential integrity in the
+    database; SQL is ubiquitous for analytics and reporting.
+
+  • MongoDB strengths: horizontal scaling patterns and replica sets are part
+    of its product story; flexible documents suit evolving APIs; for our
+    learning goal, the contrast with SQL is pedagogically valuable.
+
+  • Neither is universally “better”; we chose MongoDB to learn document
+    modelling and NoSQL tooling deliberately, while acknowledging that many
+    production systems use SQL or polyglot persistence (both styles).
+
+
+4. ALIGNMENT WITH MODULE OUTCOMES
+---------------------------------
+
+The following table summarises how the stack supports intended outcomes.
+
+  Outcome                      Support from the chosen stack
+  ---------------------------  -----------------------------------------------
+  Parallel developer work    Separation into pages/scripts (client),
+                               routes/middleware (server), and collections
+                               (data) allows work partitioning with bounded
+                               merge risk.
+
+  Rapid contribution         Vanilla web stack plus Node lowers the barrier
+                               to first commits compared to a full SPA
+                               toolchain.
+
+  Stakeholder-visible design  HTML pages and explicit API endpoints give
+                               BAs/PMs and instructors a direct line from
+                               artefacts to running behaviour.
+
+  Documented technical growth  Node.js and MongoDB provide structured new
+                               learning relative to client-only or SQL-only
+                               backgrounds.
+
+
+5. LIMITATIONS AND MITIGATIONS
+------------------------------
+
+We acknowledge the following trade-offs and how we intend to manage them.
+
+  • Maintainability at scale. Large vanilla JavaScript codebases can become
+    difficult to navigate. Mitigation: agreed folder layout, naming
+    conventions, and optional linting; refactor only when justified by scope.
+
+  • Data integrity. MongoDB does not enforce relational constraints in the
+    same way as SQL databases. Mitigation: clear ownership of business rules
+    in application code, validation layers, and explicit agreement on
+    critical invariants (documented with BA input where appropriate).
+
+  • Security and configuration. Authentication, secrets, and environment
+    handling remain our responsibility in the Node layer; these are tracked
+    as first-class tasks, not assumed by the stack.
+
+These limitations do not invalidate our selection; they define areas for
+ongoing discipline and are suitable topics for module reflection and
+supervision.
+
+
+6. CONCLUSION
+-------------
+
+We selected HTML, CSS, and JavaScript for the front end to maximise inclusive
+participation across the developer group and to keep implementation visible
+to business and project roles as required by the collaborative module. Those
+technologies are also the native languages of the web platform, which gives
+broad browser support, clear separation of structure/style/behaviour, and—when
+combined with Node—a single core language across tiers.
+
+We selected Node.js with Express and MongoDB with Mongoose to unify the stack
+around JavaScript on the server, to use a widely taught HTTP framework, and
+to meet our stated goal of learning modern back-end and non-relational data
+practices. We compared our choices to SPA frameworks, other server ecosystems,
+and SQL databases to show that our decisions are context-driven strengths, not
+claims of universal superiority.
+
+This document is submitted for review as our initial, reasoned record of
+technology choice for the module.
+
+
+7. OFFICIAL DOCUMENTATION AND REFERENCE LINKS
+---------------------------------------------
+
+The following URLs are primary references for the technologies discussed.
+(Plain text; copy into a browser as needed.)
+
+Web platform (HTML, CSS, JavaScript)
+  MDN Web Docs — HTML:
+    https://developer.mozilla.org/en-US/docs/Web/HTML
+  MDN Web Docs — CSS:
+    https://developer.mozilla.org/en-US/docs/Web/CSS
+  MDN Web Docs — JavaScript:
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript
+  WHATWG HTML Living Standard (specification):
+    https://html.spec.whatwg.org/
+
+Node.js and Express
+  Node.js official documentation:
+    https://nodejs.org/docs/
+  Express.js official guide and API reference:
+    https://expressjs.com/
+  npm documentation (package management):
+    https://docs.npmjs.com/
+
+MongoDB and Mongoose
+  MongoDB Manual (official documentation):
+    https://www.mongodb.com/docs/
+  Mongoose documentation:
+    https://mongoosejs.com/docs/
+
+Comparative / supplementary (optional reading for contrast)
+  React (Meta) — if comparing SPA approach:
+    https://react.dev/
+  PostgreSQL documentation — relational comparison point:
+    https://www.postgresql.org/docs/
+  Python Django documentation — alternative full-stack style:
+    https://docs.djangoproject.com/
+
+
+================================================================================
+  END OF REPORT
+================================================================================

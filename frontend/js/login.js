@@ -36,6 +36,21 @@
     els.authError.textContent = msg;
   }
 
+  function extractPhoneDigits(phone) {
+    return phone.replace(/\D/g, '');
+  }
+
+  function validatePhoneNumber(phone) {
+    if (!phone || typeof phone !== 'string') {
+      return { isValid: false, error: 'Phone number is required.' };
+    }
+    const digitsOnly = extractPhoneDigits(phone.trim());
+    if (digitsOnly.length !== 10) {
+      return { isValid: false, error: 'Phone number must be exactly 10 digits.' };
+    }
+    return { isValid: true, cleanedPhone: digitsOnly };
+  }
+
   function setLoading(on) {
     if (els.authLoading) els.authLoading.hidden = !on;
     if (els.btnSubmit) els.btnSubmit.disabled = on;
@@ -92,11 +107,14 @@
         return;
       }
       const phone = document.getElementById('phone').value.trim();
-      if (!phone) {
-        setAuthError('Phone number is required.');
+
+      const phoneValidation = validatePhoneNumber(phone);
+      if (!phoneValidation.isValid) {
+        setAuthError(phoneValidation.error);
         return;
       }
-      const body = { role, email, password, phone };
+
+      const body = { role, email, password, phone: phoneValidation.cleanedPhone };
       if (role === 'agency_admin') {
         body.agencyName = document.getElementById('agency-name').value.trim();
         body.serviceType = document.getElementById('service-type').value;

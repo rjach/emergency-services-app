@@ -60,6 +60,21 @@
     els.loading.hidden = !on;
   }
 
+  function extractPhoneDigits(phone) {
+    return phone.replace(/\D/g, '');
+  }
+
+  function validatePhoneNumber(phone) {
+    if (!phone || typeof phone !== 'string') {
+      return { isValid: false, error: 'Phone number is required.' };
+    }
+    const digitsOnly = extractPhoneDigits(phone.trim());
+    if (digitsOnly.length !== 10) {
+      return { isValid: false, error: 'Phone number must be exactly 10 digits.' };
+    }
+    return { isValid: true, cleanedPhone: digitsOnly };
+  }
+
   async function fetchContacts() {
     setContactsError('');
     setContactsLoading(true);
@@ -206,7 +221,7 @@
     openModal(true);
   }
 
-  els.form.addEventListener('submit', async (e) => {
+   els.form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = els.fieldName.value.trim();
     const phone = els.fieldPhone.value.trim();
@@ -215,6 +230,12 @@
 
     if (!name || !phone || !relationship) return;
 
+    const phoneValidation = validatePhoneNumber(phone);
+    if (!phoneValidation.isValid) {
+      setContactsError(phoneValidation.error);
+      return;
+    }
+
     setContactsError('');
 
     if (editingId) {
@@ -222,7 +243,7 @@
         `/user/contacts/${encodeURIComponent(editingId)}`,
         {
           method: 'PATCH',
-          body: JSON.stringify({ name, phone, relationship, notifyOnAlert }),
+          body: JSON.stringify({ name, phone: phoneValidation.cleanedPhone, relationship, notifyOnAlert }),
         }
       );
       if (status === 401 || status === 403) {
@@ -237,7 +258,7 @@
     } else {
       const { ok, data, status } = await A.api('/user/contacts', {
         method: 'POST',
-        body: JSON.stringify({ name, phone, relationship, notifyOnAlert }),
+        body: JSON.stringify({ name, phone: phoneValidation.cleanedPhone, relationship, notifyOnAlert }),
       });
       if (status === 401 || status === 403) {
         A.clearSession();
