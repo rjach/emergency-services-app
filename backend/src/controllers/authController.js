@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { validatePhoneNumber } = require("../utils/phoneValidator");
 
 const MIN_PASSWORD_LENGTH = 8;
 const BCRYPT_ROUNDS = 12;
@@ -82,6 +83,14 @@ async function signup(req, res) {
       });
     }
 
+    const phoneValidation = validatePhoneNumber(phone);
+    if (!phoneValidation.isValid) {
+      return res.status(400).json({
+        success: false,
+        message: phoneValidation.error,
+      });
+    }
+
     let agency = undefined;
     if (role === "agency_admin") {
       if (!agencyName?.trim() || !serviceType || !address?.trim()) {
@@ -117,7 +126,7 @@ async function signup(req, res) {
       email: email.toLowerCase().trim(),
       passwordHash,
       role,
-      phone: phone.trim(),
+      phone: phoneValidation.cleanedPhone,
       agency: role === "agency_admin" ? agency : undefined,
     });
 

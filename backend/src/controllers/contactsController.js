@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const EmergencyContact = require('../models/EmergencyContact');
+const { validatePhoneNumber } = require('../utils/phoneValidator');
 
 function toPublic(doc) {
   return {
@@ -51,6 +52,14 @@ async function create(req, res) {
         message: 'phone is required',
       });
     }
+
+    const phoneValidation = validatePhoneNumber(phone);
+    if (!phoneValidation.isValid) {
+      return res.status(400).json({
+        success: false,
+        message: phoneValidation.error,
+      });
+    }
     if (!relationship || typeof relationship !== 'string' || !relationship.trim()) {
       return res.status(400).json({
         success: false,
@@ -61,7 +70,7 @@ async function create(req, res) {
     const payload = {
       user: req.user.id,
       name: name.trim(),
-      phone: phone.trim(),
+      phone: phoneValidation.cleanedPhone,
       relationship: relationship.trim(),
     };
     if (typeof notifyOnAlert === 'boolean') {
@@ -112,7 +121,16 @@ async function update(req, res) {
           message: 'phone cannot be empty',
         });
       }
-      updates.phone = phone.trim();
+
+      const phoneValidation = validatePhoneNumber(phone);
+      if (!phoneValidation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: phoneValidation.error,
+        });
+      }
+
+      updates.phone = phoneValidation.cleanedPhone;
     }
     if (relationship !== undefined) {
       if (typeof relationship !== 'string' || !relationship.trim()) {
