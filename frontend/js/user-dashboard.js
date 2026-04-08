@@ -47,6 +47,7 @@
   };
 
   let editingId = null;
+  let deleteInProgress = false;
 
   function setContactsError(msg) {
     if (!msg) {
@@ -172,6 +173,33 @@
     renderContacts();
   }
 
+  async function deleteContact(id) {
+    if (deleteInProgress) return;
+    const c = findContact(id);
+    if (!c) return;
+    const label = c.name.trim() || 'this contact';
+    if (!window.confirm(`Remove ${label} from your emergency contacts?`)) return;
+
+    deleteInProgress = true;
+    setContactsError('');
+    const { ok, data, status } = await A.api(`/user/contacts/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    });
+    deleteInProgress = false;
+
+    if (status === 401 || status === 403) {
+      A.clearSession();
+      A.redirectToLogin();
+      return;
+    }
+    if (!ok) {
+      setContactsError(data.message || 'Could not remove contact.');
+      return;
+    }
+    contactsCache = contactsCache.filter((x) => x.id !== id);
+    renderContacts();
+  }
+
   function renderContacts() {
     const contacts = contactsCache;
     els.list.innerHTML = '';
@@ -200,9 +228,14 @@
               <span class="switch-knob"></span>
             </button>
           </div>
-          <button type="button" class="btn-icon-edit" data-action="edit" data-id="${escapeAttr(c.id)}" aria-label="Edit contact">
-            <span class="material-symbols-outlined">edit</span>
-          </button>
+          <div class="contact-card-icon-actions">
+            <button type="button" class="btn-icon-edit" data-action="edit" data-id="${escapeAttr(c.id)}" aria-label="Edit contact">
+              <span class="material-symbols-outlined">edit</span>
+            </button>
+            <button type="button" class="btn-icon-delete" data-action="delete" data-id="${escapeAttr(c.id)}" aria-label="Remove contact">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </div>
         </div>
       `;
 
@@ -217,6 +250,10 @@
 
       card.querySelector('[data-action="edit"]').addEventListener('click', () => {
         startEdit(c.id);
+      });
+
+      card.querySelector('[data-action="delete"]').addEventListener('click', () => {
+        deleteContact(c.id);
       });
 
       els.list.appendChild(card);

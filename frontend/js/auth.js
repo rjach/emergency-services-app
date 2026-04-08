@@ -61,15 +61,27 @@
     return `${base}${filename}`;
   }
 
+  /**
+   * Resolve paths to login / role dashboards whether the current page is
+   * /frontend/*.html or /frontend/dashboard/*.html.
+   */
+  function appHtmlPath(filename) {
+    const path = global.location.pathname;
+    if (path.includes("/dashboard/")) {
+      return `../${filename}`;
+    }
+    return sameFolder(filename);
+  }
+
   function redirectToLogin() {
-    global.location.href = sameFolder("index.html");
+    global.location.href = appHtmlPath("index.html");
   }
 
   function redirectAfterAuth(user) {
     if (user.role === "agency_admin") {
-      global.location.href = sameFolder("agency-dashboard.html");
+      global.location.href = appHtmlPath("agency-dashboard.html");
     } else {
-      global.location.href = sameFolder("user-dashboard.html");
+      global.location.href = appHtmlPath("user-dashboard.html");
     }
   }
 
@@ -84,7 +96,7 @@
       return null;
     }
     if (user.role === "agency_admin") {
-      global.location.href = sameFolder("agency-dashboard.html");
+      global.location.href = appHtmlPath("agency-dashboard.html");
       return null;
     }
     return user;
@@ -101,7 +113,7 @@
       return null;
     }
     if (user.role !== "agency_admin") {
-      global.location.href = sameFolder("user-dashboard.html");
+      global.location.href = appHtmlPath("user-dashboard.html");
       return null;
     }
     return user;
@@ -153,6 +165,7 @@
     TOKEN_KEY,
     USER_KEY,
     sameFolder,
+    appHtmlPath,
     getApiBase,
     getToken,
     getUser,

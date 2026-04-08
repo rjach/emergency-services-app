@@ -753,6 +753,32 @@ body.modal-open {
   color: var(--green-primary);
 }
 
+.contact-card-icon-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.btn-icon-delete {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 8px;
+  display: flex;
+}
+
+.btn-icon-delete:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.btn-icon-delete:focus-visible {
+  outline: 2px solid #b91c1c;
+  outline-offset: 2px;
+}
+
 /* Map placeholder */
 .ud-map-section {
   margin-top: 1.25rem;
