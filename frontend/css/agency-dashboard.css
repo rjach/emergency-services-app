@@ -140,6 +140,20 @@
   object-fit: cover;
 }
 
+.agency-avatar--initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #fff;
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+  border: none;
+  flex-shrink: 0;
+  user-select: none;
+}
+
 .agency-btn-outline {
   font-family: inherit;
   font-size: 0.875rem;

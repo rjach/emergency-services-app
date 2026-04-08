@@ -333,5 +333,14 @@
 
   els.welcome.textContent = `Welcome back, ${displayFirstName(user)}`;
 
+  const profileBtn = document.getElementById('btn-profile-menu');
+  const profileInitials = document.getElementById('ud-profile-initials');
+  if (profileInitials) {
+    profileInitials.textContent = A.getUserInitials(user);
+  }
+  if (profileBtn && user.email) {
+    profileBtn.setAttribute('aria-label', `Account, ${user.email}`);
+  }
+
   fetchContacts();
 })();
