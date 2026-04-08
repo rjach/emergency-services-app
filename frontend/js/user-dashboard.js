@@ -41,7 +41,9 @@
     fieldPhone: document.getElementById('contact-phone'),
     fieldRelationship: document.getElementById('contact-relationship'),
     fieldNotify: document.getElementById('contact-notify'),
-    profileBtn: document.getElementById('btn-profile-menu'),
+    btnLogout: document.getElementById('btn-logout'),
+    logoutModal: document.getElementById('logout-modal-root'),
+    logoutConfirm: document.getElementById('logout-confirm-btn'),
   };
 
   let editingId = null;
@@ -113,10 +115,35 @@
   function closeModal() {
     els.modalRoot.hidden = true;
     els.modalRoot.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('modal-open');
+    if (!els.logoutModal || els.logoutModal.hidden) {
+      document.body.classList.remove('modal-open');
+    }
     editingId = null;
     els.form.reset();
     els.fieldId.value = '';
+  }
+
+  function openLogoutModal() {
+    if (!els.logoutModal) return;
+    els.logoutModal.hidden = false;
+    els.logoutModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    if (els.logoutConfirm) els.logoutConfirm.focus();
+  }
+
+  function closeLogoutModal() {
+    if (!els.logoutModal) return;
+    els.logoutModal.hidden = true;
+    els.logoutModal.setAttribute('aria-hidden', 'true');
+    if (els.modalRoot.hidden) {
+      document.body.classList.remove('modal-open');
+    }
+    if (els.btnLogout) els.btnLogout.focus();
+  }
+
+  function performLogout() {
+    A.clearSession();
+    A.redirectToLogin();
   }
 
   function findContact(id) {
@@ -282,15 +309,27 @@
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !els.modalRoot.hidden) closeModal();
+    if (e.key !== 'Escape') return;
+    if (els.logoutModal && !els.logoutModal.hidden) {
+      closeLogoutModal();
+      return;
+    }
+    if (!els.modalRoot.hidden) closeModal();
   });
 
-  els.profileBtn.addEventListener('click', () => {
-    if (window.confirm('Sign out and return to login?')) {
-      A.clearSession();
-      A.redirectToLogin();
-    }
-  });
+  if (els.btnLogout) {
+    els.btnLogout.addEventListener('click', openLogoutModal);
+  }
+
+  if (els.logoutModal) {
+    els.logoutModal.addEventListener('click', (e) => {
+      if (e.target.closest('[data-logout-dismiss]')) closeLogoutModal();
+    });
+  }
+
+  if (els.logoutConfirm) {
+    els.logoutConfirm.addEventListener('click', performLogout);
+  }
 
   els.welcome.textContent = `Welcome back, ${displayFirstName(user)}`;
 

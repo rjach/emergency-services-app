@@ -41,11 +41,14 @@
           <span class="material-symbols-outlined">settings</span>
         </button>
         <button type="button" class="btn-request-help">Request Help</button>
+        <button type="button" class="btn-logout" id="btn-logout">
+          Log out
+        </button>
         <button
           type="button"
           class="ud-profile"
           id="btn-profile-menu"
-          aria-label="Account menu"
+          aria-label="Account"
         >
           <img
             class="ud-profile-img"
@@ -259,6 +262,44 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <div
+      id="logout-modal-root"
+      class="modal-root modal-root--top"
+      hidden
+      aria-hidden="true"
+    >
+      <div class="modal-backdrop" data-logout-dismiss tabindex="-1"></div>
+      <div
+        class="modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logout-modal-title"
+      >
+        <div class="modal-head">
+          <h2 id="logout-modal-title" class="modal-title">Sign out?</h2>
+          <button
+            type="button"
+            class="modal-close"
+            data-logout-dismiss
+            aria-label="Close"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <p class="modal-body-text">
+          You will need to sign in again to access your dashboard and contacts.
+        </p>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal-secondary" data-logout-dismiss>
+            Cancel
+          </button>
+          <button type="button" class="btn-modal-primary" id="logout-confirm-btn">
+            Sign out
+          </button>
+        </div>
       </div>
     </div>
 
