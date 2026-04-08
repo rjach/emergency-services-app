@@ -11,12 +11,47 @@
     if (!user) return;
 
     const signOutBtn = document.getElementById('agency-sign-out');
+    const logoutModal = document.getElementById('agency-logout-modal');
+    const logoutConfirm = document.getElementById('agency-logout-confirm');
+
+    function openLogoutModal() {
+      if (!logoutModal) return;
+      logoutModal.hidden = false;
+      logoutModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('agency-modal-open');
+      if (logoutConfirm) logoutConfirm.focus();
+    }
+
+    function closeLogoutModal() {
+      if (!logoutModal) return;
+      logoutModal.hidden = true;
+      logoutModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('agency-modal-open');
+      if (signOutBtn) signOutBtn.focus();
+    }
+
     if (signOutBtn) {
-      signOutBtn.addEventListener('click', () => {
+      signOutBtn.addEventListener('click', openLogoutModal);
+    }
+
+    if (logoutModal) {
+      logoutModal.addEventListener('click', (e) => {
+        if (e.target.closest('[data-agency-logout-dismiss]')) closeLogoutModal();
+      });
+    }
+
+    if (logoutConfirm) {
+      logoutConfirm.addEventListener('click', () => {
         A.clearSession();
         A.redirectToLogin();
       });
     }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      if (!logoutModal || logoutModal.hidden) return;
+      closeLogoutModal();
+    });
 
     const filterRoot = document.getElementById('incident-filters');
     const incidentRows = document.querySelectorAll('[data-incident-status]');

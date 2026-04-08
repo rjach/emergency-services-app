@@ -467,6 +467,23 @@ body.modal-open {
   display: block;
 }
 
+.btn-logout {
+  padding: 0.55rem 1rem;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+}
+
+.btn-logout:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
 .ud-page {
   flex: 1;
   max-width: 1200px;
@@ -960,6 +977,21 @@ body.modal-open {
   align-items: center;
   justify-content: center;
   padding: 1rem;
+}
+
+.modal-root--top {
+  z-index: 220;
+}
+
+.modal-root[hidden] {
+  display: none;
+}
+
+.modal-body-text {
+  margin: 0 0 1.25rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
 }
 
 .modal-backdrop {

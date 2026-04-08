@@ -352,6 +352,44 @@
       </div>
     </footer>
 
+    <div
+      id="agency-logout-modal"
+      class="agency-modal-root"
+      hidden
+      aria-hidden="true"
+    >
+      <div class="agency-modal-backdrop" data-agency-logout-dismiss tabindex="-1"></div>
+      <div
+        class="agency-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="agency-logout-title"
+      >
+        <div class="agency-modal-head">
+          <h2 id="agency-logout-title" class="agency-modal-title">Sign out?</h2>
+          <button
+            type="button"
+            class="agency-modal-close"
+            data-agency-logout-dismiss
+            aria-label="Close"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <p class="agency-modal-text">
+          You will need to sign in again to access the agency command center.
+        </p>
+        <div class="agency-modal-actions">
+          <button type="button" class="agency-btn-outline" data-agency-logout-dismiss>
+            Cancel
+          </button>
+          <button type="button" class="agency-btn-primary" id="agency-logout-confirm">
+            Sign out
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script src="./js/auth.js"></script>
     <script src="./js/agency-dashboard.js"></script>
   </body>
