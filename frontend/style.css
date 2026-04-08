@@ -729,6 +729,21 @@ body.modal-open {
   color: var(--green-primary);
 }
 
+.btn-icon-delete {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 8px;
+  display: flex;
+}
+
+.btn-icon-delete:hover {
+  background: var(--bg-page);
+  color: #b42318; /* danger red */
+}
+
 /* Map placeholder */
 .ud-map-section {
   margin-top: 1.25rem;

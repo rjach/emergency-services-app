@@ -176,6 +176,9 @@
           <button type="button" class="btn-icon-edit" data-action="edit" data-id="${escapeAttr(c.id)}" aria-label="Edit contact">
             <span class="material-symbols-outlined">edit</span>
           </button>
+          <button type="button" class="btn-icon-delete" data-action="delete" data-id="${escapeAttr(c.id)}" aria-label="Delete contact">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
         </div>
       `;
 
@@ -191,6 +194,29 @@
       card.querySelector('[data-action="edit"]').addEventListener('click', () => {
         startEdit(c.id);
       });
+
+      const delBtn = card.querySelector('[data-action="delete"]');
+      if (delBtn) {
+        delBtn.addEventListener('click', async () => {
+          if (!confirm('Delete this contact? This action cannot be undone.')) return;
+          setContactsError('');
+          const { ok, data, status } = await A.api(`/user/contacts/${encodeURIComponent(c.id)}`, {
+            method: 'DELETE',
+          });
+          if (status === 401 || status === 403) {
+            A.clearSession();
+            A.redirectToLogin();
+            return;
+          }
+          if (!ok) {
+            setContactsError(data.message || 'Could not delete contact.');
+            return;
+          }
+          // remove from local cache and re-render
+          contactsCache = contactsCache.filter((x) => x.id !== c.id);
+          renderContacts();
+        });
+      }
 
       els.list.appendChild(card);
     });
