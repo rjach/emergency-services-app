@@ -1,40 +1,55 @@
+(function () {
+  'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
-
-  // 1. Service Selection Interaction
-  const serviceButtons = document.querySelectorAll('.service-btn');
-
-  serviceButtons.forEach(button => {
-      button.addEventListener('click', () => {
-          // Remove 'active' selection state from all buttons
-          serviceButtons.forEach(btn => btn.classList.remove('active'));
-          
-          // Add 'active' class to the clicked button
-          button.classList.add('active');
+  document.addEventListener('DOMContentLoaded', () => {
+    const A = window.RapidAidAuth;
+    const loginBtn = document.getElementById('btn-dashboard-login');
+    if (loginBtn && A) {
+      loginBtn.addEventListener('click', async () => {
+        const token = A.getToken();
+        if (token) {
+          const user = await A.refreshUserFromApi();
+          if (user) {
+            A.redirectAfterAuth(user);
+            return;
+          }
+        }
+        window.location.href = A.appHtmlPath('index.html');
       });
-  });
+    } else if (loginBtn) {
+      loginBtn.addEventListener('click', () => {
+        window.location.href = '../index.html';
+      });
+    }
 
-  // 2. Submit Emergency Interaction
-  const submitBtn = document.querySelector('.btn-submit');
-  const textArea = document.querySelector('textarea');
+    // 1. Service Selection Interaction
+    const serviceButtons = document.querySelectorAll('.service-btn');
 
-  submitBtn.addEventListener('click', () => {
-      const activeService = document.querySelector('.service-btn.active');
-      const description = textArea.value.trim();
-      
-      // Guard Clause: Warn user if no emergency type is selected
-      if (!activeService) {
-          alert("Please select an emergency service (Ambulance, Fire, or Police) first.");
+    serviceButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        serviceButtons.forEach((btn) => btn.classList.remove('active'));
+        button.classList.add('active');
+      });
+    });
+
+    // 2. Submit Emergency Interaction
+    const submitBtn = document.querySelector('.btn-submit');
+    const textArea = document.querySelector('textarea');
+
+    if (submitBtn && textArea) {
+      submitBtn.addEventListener('click', () => {
+        const activeService = document.querySelector('.service-btn.active');
+        const description = textArea.value.trim();
+
+        if (!activeService) {
+          alert('Please select an emergency service (Ambulance, Fire, or Police) first.');
           return;
-      }
-      
-      const serviceType = activeService.getAttribute('data-service');
-      
-      // Logging for the console simulation
-      console.log(`Submitting ${serviceType} request... Context: "${description}"`);
-      
-      // Final feedback
-      alert(`Emergency dispatch triggered for: ${serviceType.toUpperCase()}`);
-  });
+        }
 
-});
+        const serviceType = activeService.getAttribute('data-service');
+        console.log(`Submitting ${serviceType} request... Context: "${description}"`);
+        alert(`Emergency dispatch triggered for: ${serviceType.toUpperCase()}`);
+      });
+    }
+  });
+})();
