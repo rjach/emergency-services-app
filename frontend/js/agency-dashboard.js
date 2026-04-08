@@ -10,6 +10,11 @@
     const user = A.guardAgencyPage();
     if (!user) return;
 
+    const avatarInitials = document.getElementById('agency-avatar-initials');
+    if (avatarInitials) {
+      avatarInitials.textContent = A.getUserInitials(user);
+    }
+
     const signOutBtn = document.getElementById('agency-sign-out');
     const logoutModal = document.getElementById('agency-logout-modal');
     const logoutConfirm = document.getElementById('agency-logout-confirm');

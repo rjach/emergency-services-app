@@ -117,6 +117,38 @@
     return null;
   }
 
+  /**
+   * Two-letter avatar initials from display name or email (e.g. "Rojan Acharya" → RA,
+   * rojan.acharya@… → RA).
+   */
+  function getUserInitials(user) {
+    if (!user) return "?";
+    const name = user.name;
+    if (name && typeof name === "string") {
+      const parts = name.trim().split(/\s+/).filter(Boolean);
+      if (parts.length >= 2) {
+        const a = parts[0][0] || "";
+        const b = parts[parts.length - 1][0] || "";
+        return (a + b).toUpperCase() || "?";
+      }
+      if (parts.length === 1 && parts[0].length) {
+        return parts[0].slice(0, 2).toUpperCase();
+      }
+    }
+    const email = user.email || "";
+    const local = email.split("@")[0] || "";
+    const segs = local.split(/[._-]+/).filter(Boolean);
+    if (segs.length >= 2) {
+      const a = segs[0][0] || "";
+      const b = segs[segs.length - 1][0] || "";
+      return (a + b).toUpperCase() || "?";
+    }
+    const alnum = local.replace(/[^a-zA-Z0-9]/g, "");
+    if (alnum.length >= 2) return alnum.slice(0, 2).toUpperCase();
+    if (alnum.length === 1) return (alnum + alnum).toUpperCase();
+    return "?";
+  }
+
   global.RapidAidAuth = {
     TOKEN_KEY,
     USER_KEY,
@@ -132,5 +164,6 @@
     guardUserPage,
     guardAgencyPage,
     refreshUserFromApi,
+    getUserInitials,
   };
 })(typeof window !== "undefined" ? window : globalThis);
