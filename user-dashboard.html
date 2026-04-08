@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="api-base" content="https://api.rapidaid.rojanacharya.com" />
+    <title>RapidAid — Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body class="page-user-dash">
+    <header class="ud-header">
+      <div class="ud-header-left">
+        <a href="./user-dashboard.html" class="ud-logo">RapidAid</a>
+        <nav class="ud-nav" aria-label="Main">
+          <a
+            href="./user-dashboard.html"
+            class="ud-nav-link ud-nav-link-active"
+            aria-current="page"
+            >Dashboard</a
+          >
+          <a href="#" class="ud-nav-link">Reports</a>
+          <a href="#" class="ud-nav-link">Resources</a>
+          <a href="#" class="ud-nav-link">Agency</a>
+        </nav>
+      </div>
+      <div class="ud-header-right">
+        <button type="button" class="ud-icon-btn" aria-label="Notifications">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <button type="button" class="ud-icon-btn" aria-label="Settings">
+          <span class="material-symbols-outlined">settings</span>
+        </button>
+        <button type="button" class="btn-request-help">Request Help</button>
+        <button
+          type="button"
+          class="ud-profile"
+          id="btn-profile-menu"
+          aria-label="Account menu"
+        >
+          <img
+            class="ud-profile-img"
+            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop"
+            alt=""
+            width="40"
+            height="40"
+          />
+        </button>
+      </div>
+    </header>
+
+    <div class="ud-page">
+      <section class="ud-hero">
+        <div>
+          <h1 class="ud-welcome" id="ud-welcome-title">Welcome back</h1>
+          <p class="ud-welcome-sub">
+            Your safety network is active and monitoring.
+          </p>
+        </div>
+        <div class="ud-badge-secure">
+          <span class="material-symbols-outlined">verified</span>
+          SYSTEM SECURE
+        </div>
+      </section>
+
+      <div class="ud-grid">
+        <div class="ud-col-main">
+          <section
+            class="ud-card ud-contacts-card"
+            aria-labelledby="contacts-heading"
+          >
+            <div class="ud-card-head">
+              <h2 id="contacts-heading" class="ud-card-title">
+                <span class="material-symbols-outlined ud-card-title-icon"
+                  >group</span
+                >
+                Emergency Contacts
+              </h2>
+              <button
+                type="button"
+                class="btn-add-contact"
+                id="btn-add-contact"
+              >
+                <span class="material-symbols-outlined sm">add</span>
+                Add Contact
+              </button>
+            </div>
+            <p
+              id="contacts-api-error"
+              class="contacts-api-error"
+              role="alert"
+              hidden
+            ></p>
+            <p id="contacts-loading" class="contacts-loading" hidden>
+              Loading contacts…
+            </p>
+            <div id="contacts-list" class="contacts-list"></div>
+            <p id="contacts-empty" class="contacts-empty" hidden>
+              No emergency contacts yet. Add someone you trust.
+            </p>
+          </section>
+
+      <section class="ud-map-section">
+        <!-- Header overlay -->
+        <div class="ud-map-placeholder">
+          <svg width="14" height="14" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Current Location
+        </div>
+        <div id="google-map"></div>
+ <!-- Map Controls -->
+        <div class="map-controls">
+          <button class="map-ctrl-btn" id="zoomIn" title="Zoom in">+</button>
+          <div class="map-ctrl-divider"></div>
+          <button class="map-ctrl-btn" id="zoomOut" title="Zoom out">−</button>
+          <button class="map-ctrl-btn map-ctrl-gps" id="recenter" title="My location" style="margin-top:6px;">
+            <svg width="16" height="16" fill="none" stroke="#1a73e8" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+              <circle cx="12" cy="12" r="7" stroke-dasharray="2 2"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="checkin-card">
+          <div class="checkin-label">Last Safe Check-In</div>
+          <div class="checkin-value">
+            <div class="checkin-dot"></div>
+            Home Sanctuary · 12 mins ago
+          </div>
+        </div>
+      </section>
+        </div>
+
+        <aside class="ud-col-side">
+          <section class="ud-card ud-activity-card">
+            <h2 class="ud-activity-title">Recent Activity</h2>
+            <ul class="ud-activity-list">
+              <li class="ud-activity-item">
+                <span class="ud-activity-dot ud-activity-dot--medical"></span>
+                <div class="ud-activity-body">
+                  <div class="ud-activity-meta">
+                    <span class="ud-activity-date">Mar 12 · 2:41 PM</span>
+                    <span class="tag tag-resolved">RESOLVED</span>
+                  </div>
+                  <p class="ud-activity-label">Medical Assistance</p>
+                  <blockquote class="ud-activity-quote">
+                    First responders arrived in 4.2 minutes. Emergency contact
+                    Marcus notified.
+                  </blockquote>
+                </div>
+              </li>
+              <li class="ud-activity-item">
+                <span class="ud-activity-dot ud-activity-dot--safe"></span>
+                <div class="ud-activity-body">
+                  <div class="ud-activity-meta">
+                    <span class="ud-activity-date">Mar 10 · 6:15 PM</span>
+                    <span class="tag tag-completed">COMPLETED</span>
+                  </div>
+                  <p class="ud-activity-label">Safe Path Active</p>
+                  <blockquote class="ud-activity-quote">
+                    Guided walk home from Market Street. Continuous monitoring
+                    was active for 15 minutes.
+                  </blockquote>
+                </div>
+              </li>
+              <li class="ud-activity-item">
+                <span class="ud-activity-dot ud-activity-dot--check"></span>
+                <div class="ud-activity-body">
+                  <div class="ud-activity-meta">
+                    <span class="ud-activity-date">Mar 9 · 9:00 AM</span>
+                    <span class="tag tag-auto">AUTOMATIC</span>
+                  </div>
+                  <p class="ud-activity-label">Safety Check</p>
+                </div>
+              </li>
+            </ul>
+            <button type="button" class="btn-history">View Full History</button>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <footer class="ud-footer">
+      <span class="ud-footer-logo">RapidAid</span>
+      <nav class="ud-footer-nav">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="./agency-dashboard.html">Agency Portal</a>
+        <a href="#">Contact</a>
+      </nav>
+      <p class="ud-footer-copy">© 2026 RapidAid. The Serene Guardian.</p>
+    </footer>
+
+    <div id="contact-modal-root" class="modal-root" hidden aria-hidden="true">
+      <div class="modal-backdrop" data-modal-dismiss></div>
+      <div
+        class="modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="contact-modal-title"
+      >
+        <div class="modal-head">
+          <h2 id="contact-modal-title" class="modal-title">Add contact</h2>
+          <button
+            type="button"
+            class="modal-close"
+            data-modal-dismiss
+            aria-label="Close"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <form id="contact-form" class="modal-form">
+          <input type="hidden" id="contact-id" name="id" value="" />
+          <div class="field-group-dash">
+            <label class="label-dash" for="contact-name">Name</label>
+            <input
+              id="contact-name"
+              name="name"
+              class="input-dash"
+              type="text"
+              required
+              autocomplete="name"
+            />
+          </div>
+          <div class="field-group-dash">
+            <label class="label-dash" for="contact-phone">Phone</label>
+            <input
+              id="contact-phone"
+              name="phone"
+              class="input-dash"
+              type="tel"
+              required
+              placeholder="+1 (555) 000-0000"
+              autocomplete="tel"
+            />
+          </div>
+          <div class="field-group-dash">
+            <label class="label-dash" for="contact-relationship"
+              >Relationship</label
+            >
+            <input
+              id="contact-relationship"
+              name="relationship"
+              class="input-dash"
+              type="text"
+              required
+              placeholder="e.g. Husband, Sister"
+              autocomplete="off"
+            />
+          </div>
+          <label class="checkbox-row">
+            <input
+              id="contact-notify"
+              name="notifyOnAlert"
+              type="checkbox"
+              checked
+            />
+            <span>Notify on alert</span>
+          </label>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn-modal-secondary"
+              data-modal-dismiss
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn-modal-primary">
+              Save contact
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=Your_api_key&callback=initMap" async defer></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/user-dashboard.js"></script>
+  </body>
+</html>
