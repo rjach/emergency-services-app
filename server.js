@@ -12,8 +12,14 @@ const io = new Server(server);
 const PORT = process.env.PORT || 3000;
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
-app.use(express.static(path.join(__dirname)));
+// Serve static files from the public directory
+app.use(express.static('C:\\Herald\\GPS\\Maps\\public'));
 app.use(express.json());
+
+// Explicit route for root
+app.get('/', (req, res) => {
+  res.sendFile('C:\\Herald\\GPS\\Maps\\public\\index.html');
+});
 
 app.get('/api/config', (req, res) => {
   if (!GOOGLE_MAPS_API_KEY) {
