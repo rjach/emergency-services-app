@@ -201,13 +201,20 @@
   .signal-fill {
     width: 85%;
     height: 100%;
-    background: var(--primary-green);
+    background: linear-gradient(90deg, var(--primary-green), #66b37e);
+    transition: width 420ms cubic-bezier(.2,.9,.2,1), background 300ms;
   }
   
   .signal-text {
     font-size: 0.7rem;
     color: var(--text-muted);
     font-style: italic;
+  }
+
+  .loc-coords {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    opacity: 0.95;
   }
   
   /* Central Emergency Modal */

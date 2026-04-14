@@ -758,7 +758,6 @@ body.modal-open {
   align-items: center;
   gap: 0.15rem;
 }
-
 .btn-icon-delete {
   border: none;
   background: transparent;
@@ -770,12 +769,12 @@ body.modal-open {
 }
 
 .btn-icon-delete:hover {
-  background: #fef2f2;
-  color: #b91c1c;
+  background: var(--bg-page);
+  color: #b42318; /* danger red */
 }
 
 .btn-icon-delete:focus-visible {
-  outline: 2px solid #b91c1c;
+  outline: 2px solid #b42318;
   outline-offset: 2px;
 }
 
