@@ -41,10 +41,13 @@
     fieldPhone: document.getElementById('contact-phone'),
     fieldRelationship: document.getElementById('contact-relationship'),
     fieldNotify: document.getElementById('contact-notify'),
-    profileBtn: document.getElementById('btn-profile-menu'),
+    btnLogout: document.getElementById('btn-logout'),
+    logoutModal: document.getElementById('logout-modal-root'),
+    logoutConfirm: document.getElementById('logout-confirm-btn'),
   };
 
   let editingId = null;
+  let deleteInProgress = false;
 
   function setContactsError(msg) {
     if (!msg) {
@@ -113,10 +116,35 @@
   function closeModal() {
     els.modalRoot.hidden = true;
     els.modalRoot.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('modal-open');
+    if (!els.logoutModal || els.logoutModal.hidden) {
+      document.body.classList.remove('modal-open');
+    }
     editingId = null;
     els.form.reset();
     els.fieldId.value = '';
+  }
+
+  function openLogoutModal() {
+    if (!els.logoutModal) return;
+    els.logoutModal.hidden = false;
+    els.logoutModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    if (els.logoutConfirm) els.logoutConfirm.focus();
+  }
+
+  function closeLogoutModal() {
+    if (!els.logoutModal) return;
+    els.logoutModal.hidden = true;
+    els.logoutModal.setAttribute('aria-hidden', 'true');
+    if (els.modalRoot.hidden) {
+      document.body.classList.remove('modal-open');
+    }
+    if (els.btnLogout) els.btnLogout.focus();
+  }
+
+  function performLogout() {
+    A.clearSession();
+    A.redirectToLogin();
   }
 
   function findContact(id) {
@@ -142,6 +170,33 @@
       if (i !== -1) contactsCache[i] = data.contact;
     }
     setContactsError('');
+    renderContacts();
+  }
+
+  async function deleteContact(id) {
+    if (deleteInProgress) return;
+    const c = findContact(id);
+    if (!c) return;
+    const label = c.name.trim() || 'this contact';
+    if (!window.confirm(`Remove ${label} from your emergency contacts?`)) return;
+
+    deleteInProgress = true;
+    setContactsError('');
+    const { ok, data, status } = await A.api(`/user/contacts/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    });
+    deleteInProgress = false;
+
+    if (status === 401 || status === 403) {
+      A.clearSession();
+      A.redirectToLogin();
+      return;
+    }
+    if (!ok) {
+      setContactsError(data.message || 'Could not remove contact.');
+      return;
+    }
+    contactsCache = contactsCache.filter((x) => x.id !== id);
     renderContacts();
   }
 
@@ -173,12 +228,14 @@
               <span class="switch-knob"></span>
             </button>
           </div>
-          <button type="button" class="btn-icon-edit" data-action="edit" data-id="${escapeAttr(c.id)}" aria-label="Edit contact">
-            <span class="material-symbols-outlined">edit</span>
-          </button>
-          <button type="button" class="btn-icon-delete" data-action="delete" data-id="${escapeAttr(c.id)}" aria-label="Delete contact">
-            <span class="material-symbols-outlined">delete</span>
-          </button>
+          <div class="contact-card-icon-actions">
+            <button type="button" class="btn-icon-edit" data-action="edit" data-id="${escapeAttr(c.id)}" aria-label="Edit contact">
+              <span class="material-symbols-outlined">edit</span>
+            </button>
+            <button type="button" class="btn-icon-delete" data-action="delete" data-id="${escapeAttr(c.id)}" aria-label="Remove contact">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </div>
         </div>
       `;
 
@@ -195,28 +252,9 @@
         startEdit(c.id);
       });
 
-      const delBtn = card.querySelector('[data-action="delete"]');
-      if (delBtn) {
-        delBtn.addEventListener('click', async () => {
-          if (!confirm('Delete this contact? This action cannot be undone.')) return;
-          setContactsError('');
-          const { ok, data, status } = await A.api(`/user/contacts/${encodeURIComponent(c.id)}`, {
-            method: 'DELETE',
-          });
-          if (status === 401 || status === 403) {
-            A.clearSession();
-            A.redirectToLogin();
-            return;
-          }
-          if (!ok) {
-            setContactsError(data.message || 'Could not delete contact.');
-            return;
-          }
-          // remove from local cache and re-render
-          contactsCache = contactsCache.filter((x) => x.id !== c.id);
-          renderContacts();
-        });
-      }
+      card.querySelector('[data-action="delete"]').addEventListener('click', () => {
+        deleteContact(c.id);
+      });
 
       els.list.appendChild(card);
     });
@@ -308,17 +346,38 @@
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !els.modalRoot.hidden) closeModal();
+    if (e.key !== 'Escape') return;
+    if (els.logoutModal && !els.logoutModal.hidden) {
+      closeLogoutModal();
+      return;
+    }
+    if (!els.modalRoot.hidden) closeModal();
   });
 
-  els.profileBtn.addEventListener('click', () => {
-    if (window.confirm('Sign out and return to login?')) {
-      A.clearSession();
-      A.redirectToLogin();
-    }
-  });
+  if (els.btnLogout) {
+    els.btnLogout.addEventListener('click', openLogoutModal);
+  }
+
+  if (els.logoutModal) {
+    els.logoutModal.addEventListener('click', (e) => {
+      if (e.target.closest('[data-logout-dismiss]')) closeLogoutModal();
+    });
+  }
+
+  if (els.logoutConfirm) {
+    els.logoutConfirm.addEventListener('click', performLogout);
+  }
 
   els.welcome.textContent = `Welcome back, ${displayFirstName(user)}`;
+
+  const profileBtn = document.getElementById('btn-profile-menu');
+  const profileInitials = document.getElementById('ud-profile-initials');
+  if (profileInitials) {
+    profileInitials.textContent = A.getUserInitials(user);
+  }
+  if (profileBtn && user.email) {
+    profileBtn.setAttribute('aria-label', `Account, ${user.email}`);
+  }
 
   fetchContacts();
 })();

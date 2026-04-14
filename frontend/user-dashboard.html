@@ -28,32 +28,21 @@
             aria-current="page"
             >Dashboard</a
           >
-          <a href="#" class="ud-nav-link">Reports</a>
-          <a href="#" class="ud-nav-link">Resources</a>
           <a href="#" class="ud-nav-link">Agency</a>
         </nav>
       </div>
       <div class="ud-header-right">
-        <button type="button" class="ud-icon-btn" aria-label="Notifications">
-          <span class="material-symbols-outlined">notifications</span>
-        </button>
-        <button type="button" class="ud-icon-btn" aria-label="Settings">
-          <span class="material-symbols-outlined">settings</span>
-        </button>
         <button type="button" class="btn-request-help">Request Help</button>
+        <button type="button" class="btn-logout" id="btn-logout">
+          Log out
+        </button>
         <button
           type="button"
           class="ud-profile"
           id="btn-profile-menu"
-          aria-label="Account menu"
+          aria-label="Account"
         >
-          <img
-            class="ud-profile-img"
-            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop"
-            alt=""
-            width="40"
-            height="40"
-          />
+          <span class="ud-profile-initials" id="ud-profile-initials" aria-hidden="true">?</span>
         </button>
       </div>
     </header>
@@ -259,6 +248,44 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <div
+      id="logout-modal-root"
+      class="modal-root modal-root--top"
+      hidden
+      aria-hidden="true"
+    >
+      <div class="modal-backdrop" data-logout-dismiss tabindex="-1"></div>
+      <div
+        class="modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logout-modal-title"
+      >
+        <div class="modal-head">
+          <h2 id="logout-modal-title" class="modal-title">Sign out?</h2>
+          <button
+            type="button"
+            class="modal-close"
+            data-logout-dismiss
+            aria-label="Close"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <p class="modal-body-text">
+          You will need to sign in again to access your dashboard and contacts.
+        </p>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal-secondary" data-logout-dismiss>
+            Cancel
+          </button>
+          <button type="button" class="btn-modal-primary" id="logout-confirm-btn">
+            Sign out
+          </button>
+        </div>
       </div>
     </div>
 

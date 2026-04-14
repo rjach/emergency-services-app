@@ -7,7 +7,7 @@
   function getApiBase() {
     const meta = document.querySelector('meta[name="api-base"]');
     return (meta && meta.content) || "https://api.rapidaid.rojanacharya.com";
-  }
+  } 
 
   function getToken() {
     return localStorage.getItem(TOKEN_KEY);
@@ -61,15 +61,27 @@
     return `${base}${filename}`;
   }
 
+  /**
+   * Resolve paths to login / role dashboards whether the current page is
+   * /frontend/*.html or /frontend/dashboard/*.html.
+   */
+  function appHtmlPath(filename) {
+    const path = global.location.pathname;
+    if (path.includes("/dashboard/")) {
+      return `../${filename}`;
+    }
+    return sameFolder(filename);
+  }
+
   function redirectToLogin() {
-    global.location.href = sameFolder("index.html");
+    global.location.href = appHtmlPath("index.html");
   }
 
   function redirectAfterAuth(user) {
     if (user.role === "agency_admin") {
-      global.location.href = sameFolder("agency-dashboard.html");
+      global.location.href = appHtmlPath("agency-dashboard.html");
     } else {
-      global.location.href = sameFolder("user-dashboard.html");
+      global.location.href = appHtmlPath("user-dashboard.html");
     }
   }
 
@@ -84,7 +96,7 @@
       return null;
     }
     if (user.role === "agency_admin") {
-      global.location.href = sameFolder("agency-dashboard.html");
+      global.location.href = appHtmlPath("agency-dashboard.html");
       return null;
     }
     return user;
@@ -101,7 +113,7 @@
       return null;
     }
     if (user.role !== "agency_admin") {
-      global.location.href = sameFolder("user-dashboard.html");
+      global.location.href = appHtmlPath("user-dashboard.html");
       return null;
     }
     return user;
@@ -117,10 +129,43 @@
     return null;
   }
 
+  /**
+   * Two-letter avatar initials from display name or email (e.g. "Rojan Acharya" → RA,
+   * rojan.acharya@… → RA).
+   */
+  function getUserInitials(user) {
+    if (!user) return "?";
+    const name = user.name;
+    if (name && typeof name === "string") {
+      const parts = name.trim().split(/\s+/).filter(Boolean);
+      if (parts.length >= 2) {
+        const a = parts[0][0] || "";
+        const b = parts[parts.length - 1][0] || "";
+        return (a + b).toUpperCase() || "?";
+      }
+      if (parts.length === 1 && parts[0].length) {
+        return parts[0].slice(0, 2).toUpperCase();
+      }
+    }
+    const email = user.email || "";
+    const local = email.split("@")[0] || "";
+    const segs = local.split(/[._-]+/).filter(Boolean);
+    if (segs.length >= 2) {
+      const a = segs[0][0] || "";
+      const b = segs[segs.length - 1][0] || "";
+      return (a + b).toUpperCase() || "?";
+    }
+    const alnum = local.replace(/[^a-zA-Z0-9]/g, "");
+    if (alnum.length >= 2) return alnum.slice(0, 2).toUpperCase();
+    if (alnum.length === 1) return (alnum + alnum).toUpperCase();
+    return "?";
+  }
+
   global.RapidAidAuth = {
     TOKEN_KEY,
     USER_KEY,
     sameFolder,
+    appHtmlPath,
     getApiBase,
     getToken,
     getUser,
@@ -132,5 +177,6 @@
     guardUserPage,
     guardAgencyPage,
     refreshUserFromApi,
+    getUserInitials,
   };
 })(typeof window !== "undefined" ? window : globalThis);
