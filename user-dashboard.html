@@ -16,6 +16,12 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./style.css" />
+  <script>
+    window.GOOGLE_MAPS_API_KEY = 'AIzaSyC7Et5s1LUVAidGMB1zslGec3vBJJ8H5Hc';
+    
+    // Set to true to use local API endpoint (requires Node.js server)
+    window.USE_API_ENDPOINT = false;
+  </script>
   </head>
   <body class="page-user-dash">
     <header class="ud-header">
@@ -28,32 +34,21 @@
             aria-current="page"
             >Dashboard</a
           >
-          <a href="#" class="ud-nav-link">Reports</a>
-          <a href="#" class="ud-nav-link">Resources</a>
           <a href="#" class="ud-nav-link">Agency</a>
         </nav>
       </div>
       <div class="ud-header-right">
-        <button type="button" class="ud-icon-btn" aria-label="Notifications">
-          <span class="material-symbols-outlined">notifications</span>
-        </button>
-        <button type="button" class="ud-icon-btn" aria-label="Settings">
-          <span class="material-symbols-outlined">settings</span>
-        </button>
         <button type="button" class="btn-request-help">Request Help</button>
+        <button type="button" class="btn-logout" id="btn-logout">
+          Log out
+        </button>
         <button
           type="button"
           class="ud-profile"
           id="btn-profile-menu"
-          aria-label="Account menu"
+          aria-label="Account"
         >
-          <img
-            class="ud-profile-img"
-            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop"
-            alt=""
-            width="40"
-            height="40"
-          />
+          <span class="ud-profile-initials" id="ud-profile-initials" aria-hidden="true">?</span>
         </button>
       </div>
     </header>
@@ -109,30 +104,35 @@
             </p>
           </section>
 
-      <section class="ud-map-section">
-        <!-- Header overlay -->
-        <div class="ud-map-placeholder">
-          <svg width="14" height="14" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="7"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          Current Location
-        </div>
-        <div id="google-map"></div>
- <!-- Map Controls -->
-        <div class="map-controls">
-          <button class="map-ctrl-btn" id="zoomIn" title="Zoom in">+</button>
-          <div class="map-ctrl-divider"></div>
-          <button class="map-ctrl-btn" id="zoomOut" title="Zoom out">−</button>
-          <button class="map-ctrl-btn map-ctrl-gps" id="recenter" title="My location" style="margin-top:6px;">
-            <svg width="16" height="16" fill="none" stroke="#1a73e8" stroke-width="2" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="3"/>
-              <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
-              <circle cx="12" cy="12" r="7" stroke-dasharray="2 2"/>
-            </svg>
-          </button>
-        </div>
-      </section>
+          <section class="ud-map-section" aria-label="Map preview">
+           <div class="ud-map-container">
+            <div class="ud-map-search-container">
+              <div class="ud-map-search-wrapper">
+                <span class="ud-map-search-icon">🔍</span>
+                <input 
+                  type="text" 
+                  id="map-search" 
+                  class="ud-map-search-input" 
+                  placeholder="Search location..."
+                  autocomplete="off"
+                >
+              </div>
+            </div>
+            <div class="ud-map-controls-container">
+              <button class="ud-control-btn" id="zoom-in" title="Zoom In">+</button>
+              <button class="ud-control-btn" id="zoom-out" title="Zoom Out">−</button>
+              <button class="ud-control-btn" id="live-location-btn" title="My Location">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
+                </svg>
+              </button>
+              <div class="ud-location-status" id="location-status">Getting location...</div>
+            </div>
+
+            <div class="ud-map-placeholder" id="map"></div>
+          </div>
+          </section>
         </div>
 
         <aside class="ud-col-side">
@@ -277,8 +277,46 @@
         </form>
       </div>
     </div>
+
+    <div
+      id="logout-modal-root"
+      class="modal-root modal-root--top"
+      hidden
+      aria-hidden="true"
+    >
+      <div class="modal-backdrop" data-logout-dismiss tabindex="-1"></div>
+      <div
+        class="modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logout-modal-title"
+      >
+        <div class="modal-head">
+          <h2 id="logout-modal-title" class="modal-title">Sign out?</h2>
+          <button
+            type="button"
+            class="modal-close"
+            data-logout-dismiss
+            aria-label="Close"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <p class="modal-body-text">
+          You will need to sign in again to access your dashboard and contacts.
+        </p>
+        <div class="modal-actions">
+          <button type="button" class="btn-modal-secondary" data-logout-dismiss>
+            Cancel
+          </button>
+          <button type="button" class="btn-modal-primary" id="logout-confirm-btn">
+            Sign out
+          </button>
+        </div>
+      </div>
+    </div>
     <script src="./js/auth.js"></script>
-<script src="./js/user-dashboard.js"></script>
-<script src="./js/user-map.js"></script>
-</body>
+    <script src="./js/user-dashboard.js"></script>
+    <script src="./js/user-map.js"></script>
+  </body>
 </html>
