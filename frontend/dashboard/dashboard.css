@@ -403,10 +403,12 @@
   }
 
   .threads-layer--back {
+    will-change: transform;
     animation: threads-drift-slow 48s ease-in-out infinite alternate;
   }
 
   .threads-layer--fore {
+    will-change: transform;
     animation: threads-drift-fore 34s ease-in-out infinite alternate;
   }
 
@@ -787,6 +789,11 @@
   .service-btn.active {
     border-color: var(--primary-green);
     background-color: white;
+  }
+
+  .service-btn:focus-visible {
+    outline: 2px solid var(--primary-green);
+    outline-offset: 3px;
   }
   
   .input-group {
