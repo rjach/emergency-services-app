@@ -178,6 +178,8 @@
     })();
 
     let mapResizeTimer = null;
+    const MAP_RESIZE_DEBOUNCE_MS = 150;
+    // Debounced invalidateSize keeps the map aligned after viewport or breakpoint changes.
     window.addEventListener('resize', () => {
       if (!dashboardMap) return;
       clearTimeout(mapResizeTimer);
@@ -187,7 +189,7 @@
         } catch (_) {
           /* ignore */
         }
-      }, 150);
+      }, MAP_RESIZE_DEBOUNCE_MS);
     });
 
     const serviceButtons = document.querySelectorAll('.service-btn');
