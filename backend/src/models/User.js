@@ -9,6 +9,26 @@ const agencySchema = new mongoose.Schema(
   { _id: false }
 );
 
+const recentActivitySchema = new mongoose.Schema(
+  {
+    kind: {
+      type: String,
+      required: true,
+      enum: ['incident_report'],
+    },
+    incidentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Incident',
+      required: true,
+    },
+    serviceType: { type: String, trim: true, required: true },
+    summary: { type: String, trim: true, default: '' },
+    statusLabel: { type: String, trim: true, default: 'SUBMITTED' },
+    createdAt: { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
+
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -26,6 +46,10 @@ const userSchema = new mongoose.Schema(
     },
     phone: { type: String, trim: true, default: '' },
     agency: agencySchema,
+    recentActivities: {
+      type: [recentActivitySchema],
+      default: [],
+    },
   },
   { timestamps: true }
 );

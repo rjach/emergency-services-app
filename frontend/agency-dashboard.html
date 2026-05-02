@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="api-base" content="https://api.rapidaid.rojanacharya.com" />
+    <meta name="api-base" content="http://localhost:8848" />
     <title>RapidAid — Agency Command Center</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,7 +23,9 @@
         <div class="agency-header__left">
           <a href="./agency-dashboard.html" class="agency-brand">RapidAid</a>
           <nav class="agency-nav" aria-label="Main">
-            <a href="./user-dashboard.html" class="agency-nav__link">Dashboard</a>
+            <a href="./user-dashboard.html" class="agency-nav__link"
+              >Dashboard</a
+            >
             <a
               href="./agency-dashboard.html"
               class="agency-nav__link agency-nav__link--current"
@@ -33,11 +35,18 @@
           </nav>
         </div>
         <div class="agency-header__actions">
-          <span class="agency-avatar agency-avatar--initials" id="agency-avatar-initials" aria-hidden="true">?</span>
+          <span
+            class="agency-avatar agency-avatar--initials"
+            id="agency-avatar-initials"
+            aria-hidden="true"
+            >?</span
+          >
           <button type="button" id="agency-sign-out" class="agency-btn-outline">
             Sign out
           </button>
-          <button type="button" class="agency-btn-primary">Request Help</button>
+          <button type="button" class="agency-btn-primary" id="agency-btn-request-help">
+            Report / Request Help
+          </button>
         </div>
       </div>
     </header>
@@ -57,7 +66,7 @@
           </div>
           <div class="agency-stat-badge agency-stat-badge--alert">
             <span class="agency-dot agency-dot--alert pulse-dot"></span>
-            <span>3 Unassigned Alerts</span>
+            <span id="agency-pending-label">0 unassigned alerts</span>
           </div>
         </div>
       </div>
@@ -65,91 +74,31 @@
       <section class="agency-section" aria-labelledby="incoming-alerts-heading">
         <div class="agency-section__head">
           <h2 id="incoming-alerts-heading" class="agency-section__title">
-            <span class="material-symbols-outlined agency-icon--alert">warning</span>
+            <span class="material-symbols-outlined agency-icon--alert"
+              >warning</span
+            >
             Incoming Alerts
           </h2>
           <span class="agency-live-pill">Live Updates</span>
         </div>
 
-        <div class="agency-cards">
-          <article class="agency-card agency-card--urgent">
-            <div class="agency-card__warning-icon pulse-dot" aria-hidden="true">
-              <span class="material-symbols-outlined">warning</span>
-            </div>
-            <div>
-              <span class="agency-tag agency-tag--high">High Urgency</span>
-              <h3 class="agency-card__title">Medical: Cardiac Arrest</h3>
-              <p class="agency-card__location">
-                <span class="material-symbols-outlined">location_on</span>
-                882 Central Ave, Downtown
-              </p>
-            </div>
-            <div class="agency-card__strip">
-              <span class="agency-card__strip-meta">Reported 2m ago</span>
-              <span class="agency-card__strip-meta">Caller: S. Miller</span>
-            </div>
-            <div class="agency-card__actions">
-              <button type="button" class="agency-card__btn agency-card__btn--white">
-                Accept
-              </button>
-              <button type="button" class="agency-card__btn agency-card__btn--alert">
-                Assign Team
-              </button>
-            </div>
-          </article>
-
-          <article class="agency-card">
-            <div>
-              <span class="agency-tag agency-tag--std">Standard</span>
-              <h3 class="agency-card__title">Fire: Small Containment</h3>
-              <p class="agency-card__location">
-                <span class="material-symbols-outlined">location_on</span>
-                North Industrial Park, Whs 4
-              </p>
-            </div>
-            <div class="agency-card__strip agency-card__strip--accent">
-              <span class="agency-card__strip-meta">Reported 5m ago</span>
-              <span class="agency-card__strip-meta">Sensor: Smoke-A12</span>
-            </div>
-            <div class="agency-card__actions">
-              <button type="button" class="agency-card__btn agency-card__btn--gray">
-                Accept
-              </button>
-              <button type="button" class="agency-card__btn agency-card__btn--assign">
-                Assign Team
-              </button>
-            </div>
-          </article>
-
-          <article class="agency-card">
-            <div>
-              <span class="agency-tag agency-tag--std">Standard</span>
-              <h3 class="agency-card__title">Traffic: Multi-Vehicle</h3>
-              <p class="agency-card__location">
-                <span class="material-symbols-outlined">location_on</span>
-                I-95 South, Exit 12
-              </p>
-            </div>
-            <div class="agency-card__strip">
-              <span class="agency-card__strip-meta">Reported 8m ago</span>
-              <span class="agency-card__strip-meta">Multiple Reports</span>
-            </div>
-            <div class="agency-card__actions">
-              <button type="button" class="agency-card__btn agency-card__btn--gray">
-                Accept
-              </button>
-              <button type="button" class="agency-card__btn agency-card__btn--assign">
-                Assign Team
-              </button>
-            </div>
-          </article>
-        </div>
+        <p id="agency-incoming-error" class="agency-api-error" role="alert" hidden></p>
+        <p id="agency-incoming-empty" class="agency-incoming-empty" hidden>
+          No incoming alerts right now. Citizen reports from the
+          <a href="./dashboard/index.html">emergency landing page</a> appear here in real time.
+        </p>
+        <div id="agency-incoming-cards" class="agency-cards" aria-live="polite"></div>
       </section>
 
-      <section class="agency-section" aria-labelledby="recent-incidents-heading">
+      <section
+        class="agency-section"
+        aria-labelledby="recent-incidents-heading"
+      >
         <div class="agency-incidents-head">
           <h2 id="recent-incidents-heading" class="agency-section__title">
-            <span class="material-symbols-outlined agency-icon--primary">history</span>
+            <span class="material-symbols-outlined agency-icon--primary"
+              >history</span
+            >
             Recent Incidents
           </h2>
           <div
@@ -207,7 +156,9 @@
               <tbody>
                 <tr data-incident-status="responding">
                   <td>
-                    <div class="agency-table__cell-title">Respiratory Distress</div>
+                    <div class="agency-table__cell-title">
+                      Respiratory Distress
+                    </div>
                     <div class="agency-table__cell-id">ID: #RA-4902</div>
                     <div class="agency-table__cell-time">Reported at 14:22</div>
                   </td>
@@ -228,12 +179,16 @@
                   </td>
                   <td>
                     <span class="agency-status agency-status--responding">
-                      <span class="agency-status-dot agency-status-dot--primary"></span>
+                      <span
+                        class="agency-status-dot agency-status-dot--primary"
+                      ></span>
                       Responding
                     </span>
                   </td>
                   <td class="agency-table__actions-cell">
-                    <button type="button" class="agency-link-btn">View Details</button>
+                    <button type="button" class="agency-link-btn">
+                      View Details
+                    </button>
                   </td>
                 </tr>
 
@@ -260,12 +215,16 @@
                   </td>
                   <td>
                     <span class="agency-status agency-status--resolved">
-                      <span class="agency-status-dot agency-status-dot--gray"></span>
+                      <span
+                        class="agency-status-dot agency-status-dot--gray"
+                      ></span>
                       Resolved
                     </span>
                   </td>
                   <td class="agency-table__actions-cell">
-                    <button type="button" class="agency-link-btn">View Log</button>
+                    <button type="button" class="agency-link-btn">
+                      View Log
+                    </button>
                   </td>
                 </tr>
 
@@ -295,7 +254,9 @@
                     </span>
                   </td>
                   <td class="agency-table__actions-cell">
-                    <button type="button" class="agency-link-btn">Action Needed</button>
+                    <button type="button" class="agency-link-btn">
+                      Action Needed
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -303,10 +264,17 @@
           </div>
 
           <div class="agency-panel__footer">
-            <span class="agency-panel__footer-note">Showing 3 of 156 recent incidents</span>
+            <span class="agency-panel__footer-note"
+              >Showing 3 of 156 recent incidents</span
+            >
             <div class="agency-panel__pager">
-              <button type="button" class="agency-pager-btn" disabled>Previous</button>
-              <button type="button" class="agency-pager-btn agency-pager-btn--next">
+              <button type="button" class="agency-pager-btn" disabled>
+                Previous
+              </button>
+              <button
+                type="button"
+                class="agency-pager-btn agency-pager-btn--next"
+              >
                 Next
               </button>
             </div>
@@ -317,7 +285,9 @@
       <p class="agency-cross-links">
         <a href="./index.html">Back to login</a>
         ·
-        <a href="./user-dashboard.html" class="agency-cross-links__subtle">Citizen dashboard</a>
+        <a href="./user-dashboard.html" class="agency-cross-links__subtle"
+          >Citizen dashboard</a
+        >
       </p>
     </main>
 
@@ -326,7 +296,9 @@
         <div class="agency-footer__links">
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
-          <a href="./agency-dashboard.html" class="agency-footer__link--emphasis"
+          <a
+            href="./agency-dashboard.html"
+            class="agency-footer__link--emphasis"
             >Agency Portal</a
           >
           <a href="#">Contact</a>
@@ -344,7 +316,11 @@
       hidden
       aria-hidden="true"
     >
-      <div class="agency-modal-backdrop" data-agency-logout-dismiss tabindex="-1"></div>
+      <div
+        class="agency-modal-backdrop"
+        data-agency-logout-dismiss
+        tabindex="-1"
+      ></div>
       <div
         class="agency-modal-dialog"
         role="dialog"
@@ -366,10 +342,18 @@
           You will need to sign in again to access the agency command center.
         </p>
         <div class="agency-modal-actions">
-          <button type="button" class="agency-btn-outline" data-agency-logout-dismiss>
+          <button
+            type="button"
+            class="agency-btn-outline"
+            data-agency-logout-dismiss
+          >
             Cancel
           </button>
-          <button type="button" class="agency-btn-primary" id="agency-logout-confirm">
+          <button
+            type="button"
+            class="agency-btn-primary"
+            id="agency-logout-confirm"
+          >
             Sign out
           </button>
         </div>

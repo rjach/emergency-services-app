@@ -368,6 +368,95 @@
     els.logoutConfirm.addEventListener('click', performLogout);
   }
 
+  function serviceActivityLabel(serviceType) {
+    switch (serviceType) {
+      case 'ambulance':
+        return 'Medical / Ambulance';
+      case 'fire':
+        return 'Fire Department';
+      case 'police':
+        return 'Police';
+      default:
+        return 'Emergency request';
+    }
+  }
+
+  function activityDotClass(serviceType) {
+    if (serviceType === 'ambulance') return 'ud-activity-dot ud-activity-dot--medical';
+    if (serviceType === 'fire') return 'ud-activity-dot ud-activity-dot--safe';
+    if (serviceType === 'police') return 'ud-activity-dot ud-activity-dot--check';
+    return 'ud-activity-dot ud-activity-dot--check';
+  }
+
+  function formatActivityWhen(iso) {
+    const d = new Date(iso);
+    if (!Number.isFinite(d.getTime())) return '';
+    return d.toLocaleString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+  }
+
+  async function fetchActivity() {
+    const listEl = document.getElementById('ud-activity-list');
+    const errEl = document.getElementById('ud-activity-error');
+    const loadEl = document.getElementById('ud-activity-loading');
+    const emptyEl = document.getElementById('ud-activity-empty');
+    if (!listEl) return;
+    if (errEl) {
+      errEl.hidden = true;
+      errEl.textContent = '';
+    }
+    if (loadEl) loadEl.hidden = false;
+
+    const { ok, data, status } = await A.api('/user/activity', { method: 'GET' });
+    if (loadEl) loadEl.hidden = true;
+    if (status === 401 || status === 403) {
+      A.clearSession();
+      A.redirectToLogin();
+      return;
+    }
+    if (!ok) {
+      if (errEl) {
+        errEl.hidden = false;
+        errEl.textContent = data.message || 'Could not load activity.';
+      }
+      return;
+    }
+    const acts = Array.isArray(data.activities) ? data.activities : [];
+    listEl.innerHTML = '';
+    if (emptyEl) emptyEl.hidden = acts.length > 0;
+    acts.forEach((a) => {
+      const li = document.createElement('li');
+      li.className = 'ud-activity-item';
+      const tag = escapeHtml((a.statusLabel || 'LOG').toUpperCase());
+      const when = escapeHtml(formatActivityWhen(a.createdAt));
+      const label = escapeHtml(serviceActivityLabel(a.serviceType));
+      const quote = escapeHtml(a.summary || '');
+      const dot = activityDotClass(a.serviceType);
+      li.innerHTML = `
+        <span class="${dot}"></span>
+        <div class="ud-activity-body">
+          <div class="ud-activity-meta">
+            <span class="ud-activity-date">${when}</span>
+            <span class="tag tag-auto">${tag}</span>
+          </div>
+          <p class="ud-activity-label">${label}</p>
+          <blockquote class="ud-activity-quote">${quote}</blockquote>
+        </div>`;
+      listEl.appendChild(li);
+    });
+  }
+
+  const btnHelp = document.getElementById('btn-request-help');
+  if (btnHelp) {
+    btnHelp.addEventListener('click', () => {
+      window.location.href = './dashboard/index.html';
+    });
+  }
+
   els.welcome.textContent = `Welcome back, ${displayFirstName(user)}`;
 
   const profileBtn = document.getElementById('btn-profile-menu');
@@ -380,4 +469,5 @@
   }
 
   fetchContacts();
+  fetchActivity();
 })();

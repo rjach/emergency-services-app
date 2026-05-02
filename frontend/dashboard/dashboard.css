@@ -343,6 +343,25 @@
   .btn-submit:hover {
     background-color: var(--primary-hover);
   }
+
+  .btn-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  .incident-form-error {
+    color: #b91c1c;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  .incident-form-success {
+    color: var(--primary-green);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
   
   .location-notice {
     display: flex;

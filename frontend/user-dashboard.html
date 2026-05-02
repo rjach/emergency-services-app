@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="api-base" content="https://api.rapidaid.rojanacharya.com" />
+    <meta name="api-base" content="http://localhost:8848" />
     <title>RapidAid — Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -28,11 +28,13 @@
             aria-current="page"
             >Dashboard</a
           >
-          <a href="#" class="ud-nav-link">Agency</a>
+          <a href="./agency-dashboard.html" class="ud-nav-link">Agency</a>
         </nav>
       </div>
       <div class="ud-header-right">
-        <button type="button" class="btn-request-help">Request Help</button>
+        <button type="button" class="btn-request-help" id="btn-request-help">
+          Request Help
+        </button>
         <button type="button" class="btn-logout" id="btn-logout">
           Log out
         </button>
@@ -42,7 +44,12 @@
           id="btn-profile-menu"
           aria-label="Account"
         >
-          <span class="ud-profile-initials" id="ud-profile-initials" aria-hidden="true">?</span>
+          <span
+            class="ud-profile-initials"
+            id="ud-profile-initials"
+            aria-hidden="true"
+            >?</span
+          >
         </button>
       </div>
     </header>
@@ -111,47 +118,15 @@
         <aside class="ud-col-side">
           <section class="ud-card ud-activity-card">
             <h2 class="ud-activity-title">Recent Activity</h2>
-            <ul class="ud-activity-list">
-              <li class="ud-activity-item">
-                <span class="ud-activity-dot ud-activity-dot--medical"></span>
-                <div class="ud-activity-body">
-                  <div class="ud-activity-meta">
-                    <span class="ud-activity-date">Mar 12 · 2:41 PM</span>
-                    <span class="tag tag-resolved">RESOLVED</span>
-                  </div>
-                  <p class="ud-activity-label">Medical Assistance</p>
-                  <blockquote class="ud-activity-quote">
-                    First responders arrived in 4.2 minutes. Emergency contact
-                    Marcus notified.
-                  </blockquote>
-                </div>
-              </li>
-              <li class="ud-activity-item">
-                <span class="ud-activity-dot ud-activity-dot--safe"></span>
-                <div class="ud-activity-body">
-                  <div class="ud-activity-meta">
-                    <span class="ud-activity-date">Mar 10 · 6:15 PM</span>
-                    <span class="tag tag-completed">COMPLETED</span>
-                  </div>
-                  <p class="ud-activity-label">Safe Path Active</p>
-                  <blockquote class="ud-activity-quote">
-                    Guided walk home from Market Street. Continuous monitoring
-                    was active for 15 minutes.
-                  </blockquote>
-                </div>
-              </li>
-              <li class="ud-activity-item">
-                <span class="ud-activity-dot ud-activity-dot--check"></span>
-                <div class="ud-activity-body">
-                  <div class="ud-activity-meta">
-                    <span class="ud-activity-date">Mar 9 · 9:00 AM</span>
-                    <span class="tag tag-auto">AUTOMATIC</span>
-                  </div>
-                  <p class="ud-activity-label">Safety Check</p>
-                </div>
-              </li>
-            </ul>
-            <button type="button" class="btn-history">View Full History</button>
+            <p id="ud-activity-error" class="contacts-api-error" role="alert" hidden></p>
+            <p id="ud-activity-loading" class="contacts-loading" hidden>Loading activity…</p>
+            <p id="ud-activity-empty" class="contacts-empty" hidden>
+              No recent activity yet. Use Request Help to submit an incident; when you are signed in, it appears here.
+            </p>
+            <ul class="ud-activity-list" id="ud-activity-list"></ul>
+            <button type="button" class="btn-history" id="btn-view-history" disabled>
+              View Full History
+            </button>
           </section>
         </aside>
       </div>
@@ -282,7 +257,11 @@
           <button type="button" class="btn-modal-secondary" data-logout-dismiss>
             Cancel
           </button>
-          <button type="button" class="btn-modal-primary" id="logout-confirm-btn">
+          <button
+            type="button"
+            class="btn-modal-primary"
+            id="logout-confirm-btn"
+          >
             Sign out
           </button>
         </div>
