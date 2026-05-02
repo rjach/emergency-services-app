@@ -989,3 +989,22 @@ body.agency-modal-open {
   flex-wrap: wrap;
   gap: 0.65rem;
 }
+
+.agency-api-error {
+  color: #b91c1c;
+  font-size: 0.9rem;
+  margin: 0 0 1rem;
+  line-height: 1.45;
+}
+
+.agency-incoming-empty {
+  margin: 0 0 1.25rem;
+  font-size: 0.95rem;
+  color: var(--agency-text-muted);
+  line-height: 1.5;
+}
+
+.agency-incoming-empty a {
+  color: var(--agency-primary);
+  font-weight: 600;
+}
