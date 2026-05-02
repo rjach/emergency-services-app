@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="api-base" content="http://localhost:8848" />
+    <meta name="api-base" content="https://api.rapidaid.rojanacharya.com" />
     <title>RapidAid — Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -118,13 +118,26 @@
         <aside class="ud-col-side">
           <section class="ud-card ud-activity-card">
             <h2 class="ud-activity-title">Recent Activity</h2>
-            <p id="ud-activity-error" class="contacts-api-error" role="alert" hidden></p>
-            <p id="ud-activity-loading" class="contacts-loading" hidden>Loading activity…</p>
+            <p
+              id="ud-activity-error"
+              class="contacts-api-error"
+              role="alert"
+              hidden
+            ></p>
+            <p id="ud-activity-loading" class="contacts-loading" hidden>
+              Loading activity…
+            </p>
             <p id="ud-activity-empty" class="contacts-empty" hidden>
-              No recent activity yet. Use Request Help to submit an incident; when you are signed in, it appears here.
+              No recent activity yet. Use Request Help to submit an incident;
+              when you are signed in, it appears here.
             </p>
             <ul class="ud-activity-list" id="ud-activity-list"></ul>
-            <button type="button" class="btn-history" id="btn-view-history" disabled>
+            <button
+              type="button"
+              class="btn-history"
+              id="btn-view-history"
+              disabled
+            >
               View Full History
             </button>
           </section>

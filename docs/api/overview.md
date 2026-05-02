@@ -2,7 +2,7 @@
 
 ## Base URL
 
-- `http://localhost:8848` (configurable via `PORT`)
+- `https://api.rapidaid.rojanacharya.com` (configurable via `PORT`)
 
 ## Health
 

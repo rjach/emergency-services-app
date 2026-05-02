@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="api-base" content="http://localhost:8848" />
+    <meta name="api-base" content="https://api.rapidaid.rojanacharya.com" />
     <title>RapidAid Dashboard</title>
     <link rel="stylesheet" href="dashboard.css" />
   </head>
@@ -65,11 +65,18 @@
           </button>
         </div>
 
-        <p id="incident-form-error" class="incident-form-error" role="alert" hidden></p>
+        <p
+          id="incident-form-error"
+          class="incident-form-error"
+          role="alert"
+          hidden
+        ></p>
 
         <div class="input-group">
           <div class="input-group-header">
-            <label for="incident-description">Describe Situation (Optional)</label>
+            <label for="incident-description"
+              >Describe Situation (Optional)</label
+            >
             <button
               type="button"
               id="btn-voice-incident"
@@ -90,7 +97,9 @@
                 stroke-linejoin="round"
                 aria-hidden="true"
               >
-                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                <path
+                  d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"
+                />
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                 <line x1="12" y1="19" x2="12" y2="23" />
                 <line x1="8" y1="23" x2="16" y2="23" />
@@ -109,7 +118,12 @@
         <button type="button" class="btn-submit" id="btn-submit-incident">
           <span>📍</span> Submit Emergency
         </button>
-        <p id="incident-form-success" class="incident-form-success" role="status" hidden></p>
+        <p
+          id="incident-form-success"
+          class="incident-form-success"
+          role="status"
+          hidden
+        ></p>
 
         <div class="location-notice">
           <span>📌</span> Your location will be shared with responders.

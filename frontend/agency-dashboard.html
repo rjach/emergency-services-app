@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="api-base" content="http://localhost:8848" />
+    <meta name="api-base" content="https://api.rapidaid.rojanacharya.com" />
     <title>RapidAid — Agency Command Center</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -44,7 +44,11 @@
           <button type="button" id="agency-sign-out" class="agency-btn-outline">
             Sign out
           </button>
-          <button type="button" class="agency-btn-primary" id="agency-btn-request-help">
+          <button
+            type="button"
+            class="agency-btn-primary"
+            id="agency-btn-request-help"
+          >
             Report / Request Help
           </button>
         </div>
@@ -82,12 +86,22 @@
           <span class="agency-live-pill">Live Updates</span>
         </div>
 
-        <p id="agency-incoming-error" class="agency-api-error" role="alert" hidden></p>
+        <p
+          id="agency-incoming-error"
+          class="agency-api-error"
+          role="alert"
+          hidden
+        ></p>
         <p id="agency-incoming-empty" class="agency-incoming-empty" hidden>
           No incoming alerts right now. Citizen reports from the
-          <a href="./dashboard/index.html">emergency landing page</a> appear here in real time.
+          <a href="./dashboard/index.html">emergency landing page</a> appear
+          here in real time.
         </p>
-        <div id="agency-incoming-cards" class="agency-cards" aria-live="polite"></div>
+        <div
+          id="agency-incoming-cards"
+          class="agency-cards"
+          aria-live="polite"
+        ></div>
       </section>
 
       <section
