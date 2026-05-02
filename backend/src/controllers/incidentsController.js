@@ -71,6 +71,53 @@ function incidentToPublic(doc) {
   };
 }
 
+async function resolveReporterFromReq(req) {
+  let reporterUserId = null;
+  let reporterEmail = '';
+  if (req.user && req.user.role === 'user') {
+    reporterUserId = req.user.id;
+    const u = await User.findById(req.user.id).select('email').lean();
+    if (u && u.email) reporterEmail = u.email;
+  }
+  return { reporterUserId, reporterEmail };
+}
+
+async function persistIncident({ serviceType, description, location, reporterUserId, reporterEmail }) {
+  const desc =
+    typeof description === 'string' ? description.trim().slice(0, 2000) : '';
+  const incident = await Incident.create({
+    serviceType,
+    description: desc,
+    location,
+    reporterUserId,
+    reporterEmail,
+    status: 'pending',
+  });
+
+  if (reporterUserId) {
+    await User.findByIdAndUpdate(reporterUserId, {
+      $push: {
+        recentActivities: {
+          $each: [
+            {
+              kind: 'incident_report',
+              incidentId: incident._id,
+              serviceType,
+              summary: activitySummary(serviceType, desc),
+              statusLabel: 'SUBMITTED',
+              createdAt: new Date(),
+            },
+          ],
+          $position: 0,
+          $slice: 40,
+        },
+      },
+    });
+  }
+
+  return incident;
+}
+
 async function createIncident(req, res) {
   try {
     const { serviceType, description } = req.body;
@@ -94,44 +141,14 @@ async function createIncident(req, res) {
       desc = description.trim().slice(0, 2000);
     }
 
-    let reporterUserId = null;
-    let reporterEmail = '';
-
-    if (req.user && req.user.role === 'user') {
-      reporterUserId = req.user.id;
-      const u = await User.findById(req.user.id).select('email').lean();
-      if (u && u.email) reporterEmail = u.email;
-    }
-
-    const incident = await Incident.create({
+    const { reporterUserId, reporterEmail } = await resolveReporterFromReq(req);
+    const incident = await persistIncident({
       serviceType,
       description: desc,
       location,
       reporterUserId,
       reporterEmail,
-      status: 'pending',
     });
-
-    if (reporterUserId) {
-      await User.findByIdAndUpdate(reporterUserId, {
-        $push: {
-          recentActivities: {
-            $each: [
-              {
-                kind: 'incident_report',
-                incidentId: incident._id,
-                serviceType,
-                summary: activitySummary(serviceType, desc),
-                statusLabel: 'SUBMITTED',
-                createdAt: new Date(),
-              },
-            ],
-            $position: 0,
-            $slice: 40,
-          },
-        },
-      });
-    }
 
     return res.status(201).json({
       success: true,
@@ -172,4 +189,9 @@ module.exports = {
   createIncident,
   listAgencyIncidents,
   serviceLabel,
+  normalizeLocation,
+  persistIncident,
+  resolveReporterFromReq,
+  incidentToPublic,
+  SERVICE_TYPES,
 };
