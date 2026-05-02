@@ -22,6 +22,6 @@ cd frontend
 python3 -m http.server 5500
 ```
 
-Open `http://localhost:5500/index.html`. Set `<meta name="api-base" content="https://api.rapidaid.rojanacharya.com" />` if the API port differs.
+Open `http://localhost:5500/index.html`. Set `<meta name="api-base" content="http://localhost:8848" />` if the API port differs.
 
 Emergency contacts are loaded and saved via **`GET/POST/PATCH /api/user/contacts`** (see `docs/api/overview.md`).

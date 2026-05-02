@@ -63,13 +63,13 @@ npm run dev
 Expected logs:
 
 - `MongoDB connected successfully`
-- `Backend server running on https://api.rapidaid.rojanacharya.com`
+- `Backend server running on http://localhost:8848`
 
 ## 7) Test backend API in browser
 
 Open:
 
-- <https://api.rapidaid.rojanacharya.com/api/health>
+- <http://localhost:8848/api/health>
 
 Expected JSON response with `success: true`.
 
@@ -77,7 +77,7 @@ Expected JSON response with `success: true`.
 
 1. Open Postman
 2. Method: `GET`
-3. URL: `https://api.rapidaid.rojanacharya.com/api/health`
+3. URL: `http://localhost:8848/api/health`
 4. Click **Send**
 5. Verify JSON response
 
