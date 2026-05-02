@@ -1,95 +1,106 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="api-base" content="https://api.rapidaid.rojanacharya.com" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="api-base" content="http://localhost:8848" />
     <title>RapidAid Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css">
-</head>
-<body>
-
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body>
     <header>
-        <a href="./index.html" class="logo">RapidAid</a>
-        <nav aria-label="Main">
-            <a href="../user-dashboard.html">Dashboard</a>
-            <a href="../agency-dashboard.html">Agency</a>
-        </nav>
-        <div class="header-actions">
-            <button type="button" class="btn-login" id="btn-dashboard-login">Login</button>
-            <button class="icon-btn">🔔</button>
-            <button class="icon-btn">⚙️</button>
-        </div>
+      <a href="./index.html" class="logo">RapidAid</a>
+      <nav aria-label="Main">
+        <a href="../user-dashboard.html">My dashboard</a>
+        <a href="../agency-dashboard.html">Agency console</a>
+      </nav>
+      <div class="header-actions">
+        <button type="button" class="btn-login" id="btn-dashboard-login">
+          Login
+        </button>
+        <button class="icon-btn">🔔</button>
+        <button class="icon-btn">⚙️</button>
+      </div>
     </header>
 
     <main>
-        <div class="bg-overlay">
-            <div class="radar-circle"></div>
+      <div class="bg-overlay">
+        <div class="radar-circle"></div>
+      </div>
+      <div class="bg-text">EMERGENCY MAP</div>
+
+      <div class="location-card">
+        <div class="loc-header">
+          <div class="loc-icon">◎</div>
+          <div class="loc-details">
+            <h4>Verified Location</h4>
+            <p>San Francisco, CA 94103</p>
+          </div>
         </div>
-        <div class="bg-text">EMERGENCY MAP</div>
+        <div class="signal-bar">
+          <div class="signal-fill"></div>
+        </div>
+        <p class="signal-text">Signal strength: Strong (High Precision)</p>
+        <p class="loc-coords">Lat: --, Lon: -- · Updated: --</p>
+      </div>
 
-        <div class="location-card">
-            <div class="loc-header">
-                <div class="loc-icon">◎</div>
-                <div class="loc-details">
-                    <h4>Verified Location</h4>
-                    <p>San Francisco, CA 94103</p>
-                </div>
-            </div>
-            <div class="signal-bar">
-                <div class="signal-fill"></div>
-            </div>
-            <p class="signal-text">Signal strength: Strong (High Precision)</p>
-            <p class="loc-coords">Lat: --, Lon: -- · Updated: --</p>
+      <div class="emergency-modal">
+        <h1 class="modal-title">Emergency Assistance</h1>
+        <p class="modal-subtitle">
+          Select the service you require for immediate dispatch.
+        </p>
+
+        <div class="service-options">
+          <button class="service-btn" data-service="ambulance">
+            <div class="icon-wrapper">🚑</div>
+            <span>Ambulance</span>
+          </button>
+          <button class="service-btn" data-service="fire">
+            <div class="icon-wrapper">🔥</div>
+            <span>Fire Dept</span>
+          </button>
+          <button class="service-btn" data-service="police">
+            <div class="icon-wrapper">🚓</div>
+            <span>Police</span>
+          </button>
         </div>
 
-        <div class="emergency-modal">
-            <h1 class="modal-title">Emergency Assistance</h1>
-            <p class="modal-subtitle">Select the service you require for immediate dispatch.</p>
+        <p id="incident-form-error" class="incident-form-error" role="alert" hidden></p>
 
-            <div class="service-options">
-                <button class="service-btn" data-service="ambulance">
-                    <div class="icon-wrapper">🚑</div>
-                    <span>Ambulance</span>
-                </button>
-                <button class="service-btn" data-service="fire">
-                    <div class="icon-wrapper">🔥</div>
-                    <span>Fire Dept</span>
-                </button>
-                <button class="service-btn" data-service="police">
-                    <div class="icon-wrapper">🚓</div>
-                    <span>Police</span>
-                </button>
-            </div>
-
-            <div class="input-group">
-                <label>Describe Situation (Optional)</label>
-                <textarea placeholder="E.g. Accident at the intersection of 5th and Main..."></textarea>
-            </div>
-
-            <button class="btn-submit">
-                <span>📍</span> Submit Emergency
-            </button>
-
-            <div class="location-notice">
-                <span>📌</span> Your location will be shared with responders.
-            </div>
+        <div class="input-group">
+          <label for="incident-description">Describe Situation (Optional)</label>
+          <textarea
+            id="incident-description"
+            name="description"
+            maxlength="2000"
+            placeholder="E.g. Accident at the intersection of 5th and Main..."
+          ></textarea>
         </div>
+
+        <button type="button" class="btn-submit" id="btn-submit-incident">
+          <span>📍</span> Submit Emergency
+        </button>
+        <p id="incident-form-success" class="incident-form-success" role="status" hidden></p>
+
+        <div class="location-notice">
+          <span>📌</span> Your location will be shared with responders.
+        </div>
+      </div>
     </main>
 
     <footer>
-        <div class="footer-links">
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-            <a href="../agency-dashboard.html">Agency Portal</a>
-            <a href="#">Contact</a>
-        </div>
-        <div class="copyright">
-            <strong>RapidAid</strong> | &copy; 2024 RapidAid. The Serene Guardian.
-        </div>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="../agency-dashboard.html">Agency Portal</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="copyright">
+        <strong>RapidAid</strong> | &copy; 2024 RapidAid. The Serene Guardian.
+      </div>
     </footer>
 
     <script src="../js/auth.js"></script>
     <script src="dashboard.js"></script>
-</body>
+  </body>
 </html>
