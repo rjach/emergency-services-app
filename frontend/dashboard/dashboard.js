@@ -5,6 +5,111 @@
   let lastKnownLocation = null;
 
   document.addEventListener('DOMContentLoaded', () => {
+    let dashboardMap = null;
+    let dashboardMarker = null;
+
+    const DEFAULT_MAP_CENTER = [37.7749, -122.4194];
+    const DEFAULT_MAP_ZOOM = 12;
+
+    function createDashboardPinIcon() {
+      const L = window.L;
+      return L.divIcon({
+        className: 'dashboard-pin-marker',
+        html:
+          '<div class="dashboard-pin-inner" aria-hidden="true"></div>' +
+          '<span class="visually-hidden">Your approximate position</span>',
+        iconSize: [26, 26],
+        iconAnchor: [13, 13],
+        popupAnchor: [0, -12],
+      });
+    }
+
+    function initDashboardMapIfNeeded() {
+      const mapEl = document.getElementById('dashboard-map');
+      const L = window.L;
+      if (!mapEl || !L || typeof L.map !== 'function') return false;
+      if (dashboardMap) return true;
+
+      dashboardMap = L.map(mapEl, {
+        scrollWheelZoom: true,
+        zoomControl: true,
+      }).setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      }).addTo(dashboardMap);
+
+      const invalidate = () => {
+        try {
+          dashboardMap.invalidateSize();
+        } catch (_) {
+          /* ignore */
+        }
+      };
+      requestAnimationFrame(invalidate);
+      setTimeout(invalidate, 200);
+      setTimeout(invalidate, 600);
+      return true;
+    }
+
+    /**
+     * @param {number} lat
+     * @param {number} lng
+     * @param {number | null} accuracyM
+     */
+    function updateDashboardMap(lat, lng, accuracyM) {
+      if (!initDashboardMapIfNeeded()) return;
+      const L = window.L;
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+      if (!dashboardMarker) {
+        dashboardMarker = L.marker([lat, lng], {
+          icon: createDashboardPinIcon(),
+          title: 'Your approximate position',
+        }).addTo(dashboardMap);
+      } else {
+        dashboardMarker.setLatLng([lat, lng]);
+      }
+
+      let zoom = 15;
+      if (typeof accuracyM === 'number' && Number.isFinite(accuracyM)) {
+        if (accuracyM > 250) zoom = 13;
+        else if (accuracyM > 100) zoom = 14;
+        else if (accuracyM > 35) zoom = 15;
+        else zoom = 16;
+      }
+
+      const maxZ = dashboardMap.getMaxZoom ? dashboardMap.getMaxZoom() : 19;
+      dashboardMap.setView([lat, lng], Math.min(zoom, maxZ), { animate: true });
+      requestAnimationFrame(() => {
+        try {
+          dashboardMap.invalidateSize();
+        } catch (_) {
+          /* ignore */
+        }
+      });
+    }
+
+    function resetDashboardMapToDefault() {
+      if (!initDashboardMapIfNeeded()) return;
+      if (dashboardMarker && dashboardMap.hasLayer(dashboardMarker)) {
+        dashboardMap.removeLayer(dashboardMarker);
+        dashboardMarker = null;
+      }
+      dashboardMap.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+      requestAnimationFrame(() => {
+        try {
+          dashboardMap.invalidateSize();
+        } catch (_) {
+          /* ignore */
+        }
+      });
+    }
+
+    initDashboardMapIfNeeded();
+
     const A = window.RapidAidAuth;
     const loginBtn = document.getElementById('btn-dashboard-login');
     if (loginBtn && A) {
@@ -29,6 +134,61 @@
         window.location.href = '../index.html';
       });
     }
+
+    (function setupHeaderNav() {
+      const header = document.querySelector('.site-header');
+      const toggle = document.getElementById('nav-menu-toggle');
+      const nav = document.getElementById('site-nav');
+      if (!header || !toggle || !nav) return;
+
+      function setNavOpen(open) {
+        header.classList.toggle('nav-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      }
+
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setNavOpen(!header.classList.contains('nav-open'));
+      });
+
+      nav.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => setNavOpen(false));
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!header.classList.contains('nav-open')) return;
+        if (e.target instanceof Node && header.contains(e.target)) return;
+        setNavOpen(false);
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') setNavOpen(false);
+      });
+
+      const mql = window.matchMedia('(min-width: 768px)');
+      function onNavBreakpoint() {
+        if (mql.matches) setNavOpen(false);
+      }
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', onNavBreakpoint);
+      } else {
+        mql.addListener(onNavBreakpoint);
+      }
+    })();
+
+    let mapResizeTimer = null;
+    window.addEventListener('resize', () => {
+      if (!dashboardMap) return;
+      clearTimeout(mapResizeTimer);
+      mapResizeTimer = setTimeout(() => {
+        try {
+          dashboardMap.invalidateSize();
+        } catch (_) {
+          /* ignore */
+        }
+      }, 150);
+    });
 
     const serviceButtons = document.querySelectorAll('.service-btn');
     serviceButtons.forEach((button) => {
@@ -360,6 +520,8 @@
           locCoordsEl.textContent = `Lat: ${latitude.toFixed(5)}, Lon: ${longitude.toFixed(5)} · Updated: ${new Date(pos.timestamp).toLocaleTimeString()}`;
         }
         reverseGeocode(latitude, longitude);
+        const accM = typeof accuracy === 'number' && Number.isFinite(accuracy) ? accuracy : null;
+        updateDashboardMap(latitude, longitude, accM);
       }
 
       if ('geolocation' in navigator) {
@@ -368,6 +530,7 @@
           signalTextEl.textContent = 'Location unavailable';
           signalFillEl.style.width = '5%';
           locDetailsEl.textContent = 'Location unavailable';
+          resetDashboardMapToDefault();
         }, { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 });
 
         navigator.geolocation.watchPosition(recordPosition, (err) => {
@@ -377,6 +540,7 @@
         signalTextEl.textContent = 'Geolocation not supported';
         signalFillEl.style.width = '5%';
         locDetailsEl.textContent = 'Geolocation not supported';
+        resetDashboardMapToDefault();
       }
     })();
   });

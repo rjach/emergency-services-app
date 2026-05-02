@@ -5,12 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="api-base" content="https://api.rapidaid.rojanacharya.com" />
     <title>RapidAid Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
     <link rel="stylesheet" href="dashboard.css" />
   </head>
   <body>
-    <header>
+    <header class="site-header">
       <a href="./index.html" class="logo">RapidAid</a>
-      <nav aria-label="Main">
+      <button
+        type="button"
+        class="nav-menu-toggle"
+        id="nav-menu-toggle"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        aria-label="Open menu"
+      >
+        <span class="nav-menu-bar" aria-hidden="true"></span>
+        <span class="nav-menu-bar" aria-hidden="true"></span>
+        <span class="nav-menu-bar" aria-hidden="true"></span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Main">
         <a href="../user-dashboard.html">My dashboard</a>
         <a href="../agency-dashboard.html">Agency console</a>
       </nav>
@@ -18,40 +36,174 @@
         <button type="button" class="btn-login" id="btn-dashboard-login">
           Login
         </button>
-        <button class="icon-btn">🔔</button>
-        <button class="icon-btn">⚙️</button>
+        <button type="button" class="icon-btn" aria-label="Notifications">
+          🔔
+        </button>
+        <button type="button" class="icon-btn" aria-label="Settings">
+          ⚙️
+        </button>
       </div>
     </header>
 
-    <main>
-      <div class="bg-overlay">
-        <div class="radar-circle"></div>
+    <main class="dashboard-main">
+      <div class="dashboard-bg" aria-hidden="true">
+        <div class="dashboard-bg-noise"></div>
+        <div class="dashboard-bg-sweep"></div>
+        <div class="dashboard-bg-rings">
+          <span class="dashboard-ring"></span>
+          <span class="dashboard-ring"></span>
+          <span class="dashboard-ring"></span>
+        </div>
+        <div class="dashboard-bg-threads">
+          <svg
+            class="threads-canvas"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1600 1000"
+            preserveAspectRatio="xMidYMid slice"
+            focusable="false"
+          >
+            <defs>
+              <linearGradient
+                id="thread-grad-a"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop offset="0%" stop-color="#41885b" stop-opacity="0.22" />
+                <stop offset="45%" stop-color="#a89fd4" stop-opacity="0.14" />
+                <stop offset="100%" stop-color="#6a9eb0" stop-opacity="0.18" />
+              </linearGradient>
+              <linearGradient
+                id="thread-grad-b"
+                x1="100%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
+                <stop offset="0%" stop-color="#7ab89a" stop-opacity="0.16" />
+                <stop offset="55%" stop-color="#d4c4e8" stop-opacity="0.12" />
+                <stop offset="100%" stop-color="#41885b" stop-opacity="0.14" />
+              </linearGradient>
+              <linearGradient
+                id="thread-grad-c"
+                x1="50%"
+                y1="0%"
+                x2="50%"
+                y2="100%"
+              >
+                <stop offset="0%" stop-color="#c4d9e8" stop-opacity="0.2" />
+                <stop offset="100%" stop-color="#8bc4a8" stop-opacity="0.1" />
+              </linearGradient>
+            </defs>
+            <g
+              class="threads-layer threads-layer--back"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                class="thread-path"
+                stroke="url(#thread-grad-a)"
+                stroke-width="1.35"
+                d="M -120 180 C 320 40 580 380 920 260 S 1380 120 1720 220"
+              />
+              <path
+                class="thread-path"
+                stroke="url(#thread-grad-b)"
+                stroke-width="1.15"
+                d="M 80 -60 C 240 280 520 200 840 420 S 1320 520 1680 340"
+              />
+              <path
+                class="thread-path"
+                stroke="url(#thread-grad-c)"
+                stroke-width="1"
+                d="M -80 720 C 400 600 720 880 1040 680 S 1480 540 1720 760"
+              />
+              <path
+                class="thread-path"
+                stroke="url(#thread-grad-a)"
+                stroke-width="0.85"
+                opacity="0.75"
+                d="M 200 1000 C 420 720 760 820 1100 640 S 1540 480 1620 200"
+              />
+            </g>
+            <g
+              class="threads-layer threads-layer--fore"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                class="thread-path"
+                stroke="url(#thread-grad-b)"
+                stroke-width="1.1"
+                d="M -100 420 C 360 300 640 580 980 440 S 1400 320 1700 480"
+              />
+              <path
+                class="thread-path"
+                stroke="url(#thread-grad-c)"
+                stroke-width="0.95"
+                d="M 60 920 C 380 760 700 980 1020 800 S 1460 620 1680 880"
+              />
+              <path
+                class="thread-path"
+                stroke="url(#thread-grad-a)"
+                stroke-width="0.75"
+                opacity="0.65"
+                d="M 480 -80 C 520 240 880 180 1180 400 S 1520 200 1580 -40"
+              />
+            </g>
+          </svg>
+        </div>
+        <div class="dashboard-bg-vignette"></div>
       </div>
-      <div class="bg-text">EMERGENCY MAP</div>
+      <p class="bg-text">RapidAid · Live dispatch</p>
 
-      <div class="location-card">
-        <div class="loc-header">
-          <div class="loc-icon">◎</div>
-          <div class="loc-details">
-            <h4>Verified Location</h4>
-            <p>San Francisco, CA 94103</p>
+      <div class="dashboard-columns">
+        <section
+          class="map-panel"
+          aria-labelledby="map-panel-heading"
+        >
+          <h2 id="map-panel-heading" class="visually-hidden">
+            Your location and map
+          </h2>
+          <div class="location-card">
+            <div class="loc-header">
+              <div class="loc-icon" aria-hidden="true">◎</div>
+              <div class="loc-details">
+                <h4>Verified Location</h4>
+                <p>San Francisco, CA 94103</p>
+              </div>
+            </div>
+            <div class="signal-bar">
+              <div class="signal-fill"></div>
+            </div>
+            <p class="signal-text">Signal strength: Strong (High Precision)</p>
+            <p class="loc-coords">Lat: --, Lon: -- · Updated: --</p>
           </div>
-        </div>
-        <div class="signal-bar">
-          <div class="signal-fill"></div>
-        </div>
-        <p class="signal-text">Signal strength: Strong (High Precision)</p>
-        <p class="loc-coords">Lat: --, Lon: -- · Updated: --</p>
-      </div>
+          <div class="map-wrap">
+            <div
+              id="dashboard-map"
+              class="dashboard-map"
+              role="application"
+              aria-label="Map showing your approximate position"
+            ></div>
+          </div>
+        </section>
 
-      <div class="emergency-modal">
+        <div class="emergency-modal">
         <h1 class="modal-title">Emergency Assistance</h1>
         <p class="modal-subtitle">
           Select the service you require for immediate dispatch.
         </p>
 
         <div class="service-options">
-          <button class="service-btn" data-service="ambulance">
+          <button
+            type="button"
+            class="service-btn active"
+            data-service="ambulance"
+          >
             <div class="icon-wrapper">🚑</div>
             <span>Ambulance</span>
           </button>
@@ -128,6 +280,7 @@
         <div class="location-notice">
           <span>📌</span> Your location will be shared with responders.
         </div>
+        </div>
       </div>
     </main>
 
@@ -143,6 +296,11 @@
       </div>
     </footer>
 
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
     <script src="../js/auth.js"></script>
     <script src="dashboard.js"></script>
   </body>
