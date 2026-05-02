@@ -65,6 +65,17 @@
       okEl.textContent = msg;
     }
 
+    function incidentLocationPayload() {
+      return lastKnownLocation
+        ? {
+            latitude: lastKnownLocation.latitude,
+            longitude: lastKnownLocation.longitude,
+            accuracyM: lastKnownLocation.accuracyM,
+            addressLabel: lastKnownLocation.addressLabel,
+          }
+        : {};
+    }
+
     async function submitIncident() {
       if (!A || !submitBtn) return;
       const activeService = document.querySelector('.service-btn.active');
@@ -83,14 +94,7 @@
       const body = {
         serviceType,
         description,
-        location: lastKnownLocation
-          ? {
-              latitude: lastKnownLocation.latitude,
-              longitude: lastKnownLocation.longitude,
-              accuracyM: lastKnownLocation.accuracyM,
-              addressLabel: lastKnownLocation.addressLabel,
-            }
-          : {},
+        location: incidentLocationPayload(),
       };
 
       submitBtn.disabled = true;
@@ -118,6 +122,168 @@
         submitIncident();
       });
     }
+
+    (function setupVoiceIncident() {
+      const voiceBtn = document.getElementById('btn-voice-incident');
+      const voiceStatusEl = document.getElementById('voice-status');
+      if (!voiceBtn || !A) return;
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      let recognition = null;
+      let listening = false;
+      let collectedTranscript = '';
+      let mediaStream = null;
+
+      function setVoiceStatus(text) {
+        if (voiceStatusEl) voiceStatusEl.textContent = text || '';
+      }
+
+      function releaseMic() {
+        if (mediaStream) {
+          mediaStream.getTracks().forEach((t) => t.stop());
+          mediaStream = null;
+        }
+      }
+
+      function setListeningUI(on) {
+        listening = on;
+        voiceBtn.classList.toggle('listening', on);
+        voiceBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      }
+
+      async function sendVoiceToBackend(transcript) {
+        setFormError('');
+        setFormSuccess('');
+        voiceBtn.disabled = true;
+        if (submitBtn) submitBtn.disabled = true;
+        setVoiceStatus('Sending to dispatch…');
+        const body = {
+          transcript,
+          location: incidentLocationPayload(),
+        };
+        const { ok, data } = await A.api('/incidents/voice', {
+          method: 'POST',
+          body: JSON.stringify(body),
+        });
+        voiceBtn.disabled = false;
+        if (submitBtn) submitBtn.disabled = false;
+        setVoiceStatus('');
+
+        if (!ok) {
+          setFormError(data.message || 'Voice report failed. Please try again.');
+          return;
+        }
+        if (data.success) {
+          const ref = data.incident && data.incident.id ? ` Reference: ${data.incident.id}` : '';
+          setFormSuccess(`${data.message}${ref}`);
+          if (textArea) textArea.value = transcript;
+        } else {
+          setFormError(
+            data.message ||
+              'Could not create an incident from what we heard. Try again or use the form.'
+          );
+        }
+      }
+
+      function stopRecognition() {
+        if (recognition && listening) {
+          try {
+            recognition.stop();
+          } catch (_) {
+            /* ignore */
+          }
+        }
+      }
+
+      async function startVoiceFlow() {
+        if (!SpeechRecognition) {
+          setFormError(
+            'Speech recognition is not supported in this browser. Try Chrome or Edge, or type your report.'
+          );
+          return;
+        }
+
+        if (listening) {
+          stopRecognition();
+          setVoiceStatus('Stopping…');
+          return;
+        }
+
+        setFormError('');
+        setFormSuccess('');
+
+        try {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            throw new Error('Microphone access is not available in this context.');
+          }
+          mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (err) {
+          console.warn('getUserMedia', err);
+          setFormError(
+            err.name === 'NotAllowedError'
+              ? 'Microphone permission was denied. Allow access in your browser settings to use voice reporting.'
+              : 'Could not access the microphone. Check permissions and try again.'
+          );
+          releaseMic();
+          return;
+        }
+
+        collectedTranscript = '';
+        recognition = new SpeechRecognition();
+        recognition.lang = navigator.language || 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onstart = () => {
+          setListeningUI(true);
+          setVoiceStatus('Listening… speak clearly, then pause.');
+        };
+
+        recognition.onresult = (event) => {
+          for (let i = event.resultIndex; i < event.results.length; i += 1) {
+            if (event.results[i].isFinal) {
+              collectedTranscript += event.results[i][0].transcript;
+            }
+          }
+        };
+
+        recognition.onerror = (event) => {
+          console.warn('SpeechRecognition error', event.error);
+          if (event.error === 'not-allowed') {
+            setFormError('Speech recognition was blocked. Allow microphone access for this site.');
+          } else if (event.error === 'no-speech') {
+            setVoiceStatus('No speech detected. Tap the mic to try again.');
+          } else if (event.error !== 'aborted') {
+            setFormError(`Voice capture error: ${event.error}. Try again or use the form.`);
+          }
+        };
+
+        recognition.onend = async () => {
+          releaseMic();
+          setListeningUI(false);
+          const text = collectedTranscript.trim();
+          collectedTranscript = '';
+          if (!text) {
+            return;
+          }
+          await sendVoiceToBackend(text);
+        };
+
+        try {
+          recognition.start();
+        } catch (e) {
+          console.warn(e);
+          releaseMic();
+          setListeningUI(false);
+          setFormError('Could not start voice recognition. Try again.');
+        }
+      }
+
+      voiceBtn.addEventListener('click', () => {
+        startVoiceFlow();
+      });
+    })();
 
     (function setupRealtimeLocation() {
       const locDetailsEl = document.querySelector('.location-card .loc-details p');
