@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const Incident = require('../models/Incident');
 const User = require('../models/User');
+const {
+  queueDispatchForNewIncident,
+  dispatchResponderAssignedToReporter,
+} = require('../services/notificationDispatchService');
 
 const SERVICE_TYPES = new Set(['ambulance', 'fire', 'police']);
 
@@ -143,6 +147,8 @@ async function persistIncident({ serviceType, description, location, reporterUse
       },
     });
   }
+
+  queueDispatchForNewIncident(incident);
 
   return incident;
 }
@@ -334,6 +340,13 @@ async function acceptAgencyIncident(req, res) {
         success: false,
         message: 'Unable to accept this alert.',
       });
+    }
+
+    const responderLabel = acceptedBySummary(updated.acceptedByAgencyUserId) || 'A responding agency';
+    try {
+      await dispatchResponderAssignedToReporter(updated, responderLabel);
+    } catch (notifyErr) {
+      console.error('dispatchResponderAssignedToReporter:', notifyErr.message);
     }
 
     return res.status(200).json({
