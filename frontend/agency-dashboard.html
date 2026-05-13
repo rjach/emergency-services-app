@@ -16,6 +16,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./css/agency-dashboard.css" />
+    <link rel="stylesheet" href="./css/notifications.css" />
   </head>
   <body class="agency-page">
     <header class="agency-header">
@@ -35,6 +36,59 @@
           </nav>
         </div>
         <div class="agency-header__actions">
+          <div class="ra-notif" data-ra-notifications>
+            <button
+              type="button"
+              class="ra-notif__bell"
+              data-ra-notif-toggle
+              aria-expanded="false"
+              aria-controls="ra-notif-panel-agency"
+              aria-haspopup="true"
+              aria-label="Notifications"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true"
+                >notifications</span
+              >
+              <span
+                class="ra-notif__badge"
+                data-ra-notif-badge
+                data-count="0"
+                aria-live="polite"
+              ></span>
+            </button>
+            <div
+              class="ra-notif__panel"
+              id="ra-notif-panel-agency"
+              data-ra-notif-panel
+              role="region"
+              aria-label="Notifications"
+              hidden
+            >
+              <div class="ra-notif__panel-head">
+                <h2 class="ra-notif__panel-title">Notifications</h2>
+                <button
+                  type="button"
+                  class="ra-notif__mark-all"
+                  data-ra-notif-mark-all
+                >
+                  Mark all read
+                </button>
+              </div>
+              <p class="ra-notif__loading" data-ra-notif-loading hidden>
+                Loading…
+              </p>
+              <p
+                class="ra-notif__error"
+                data-ra-notif-error
+                role="alert"
+                hidden
+              ></p>
+              <p class="ra-notif__empty" data-ra-notif-empty hidden>
+                No notifications yet.
+              </p>
+              <ul class="ra-notif__list" data-ra-notif-list></ul>
+            </div>
+          </div>
           <span
             class="agency-avatar agency-avatar--initials"
             id="agency-avatar-initials"
@@ -281,6 +335,7 @@
     </div>
 
     <script src="./js/auth.js"></script>
+    <script src="./js/notifications-panel.js"></script>
     <script src="./js/agency-dashboard.js"></script>
   </body>
 </html>
