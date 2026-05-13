@@ -28,12 +28,23 @@ const incidentSchema = new mongoose.Schema(
       default: null,
     },
     reporterEmail: { type: String, trim: true, default: '' },
+    acceptedByAgencyUserId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    declinedByAgencyUserIds: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+      default: [],
+    },
   },
   { timestamps: true }
 );
 
 incidentSchema.index({ createdAt: -1 });
 incidentSchema.index({ status: 1, createdAt: -1 });
+incidentSchema.index({ serviceType: 1, status: 1, createdAt: -1 });
+incidentSchema.index({ acceptedByAgencyUserId: 1 });
 
 module.exports = mongoose.model('Incident', incidentSchema);
 module.exports.SERVICE_TYPES = SERVICE_TYPES;
