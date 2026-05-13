@@ -12,6 +12,11 @@
       crossorigin=""
     />
     <link rel="stylesheet" href="dashboard.css" />
+    <link rel="stylesheet" href="../css/notifications.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <header class="site-header">
@@ -36,9 +41,59 @@
         <button type="button" class="btn-login" id="btn-dashboard-login">
           Login
         </button>
-        <button type="button" class="icon-btn" aria-label="Notifications">
-          🔔
-        </button>
+        <div class="ra-notif" data-ra-notifications>
+          <button
+            type="button"
+            class="ra-notif__bell"
+            data-ra-notif-toggle
+            aria-expanded="false"
+            aria-controls="ra-notif-panel-map"
+            aria-haspopup="true"
+            aria-label="Notifications"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true"
+              >notifications</span
+            >
+            <span
+              class="ra-notif__badge"
+              data-ra-notif-badge
+              data-count="0"
+              aria-live="polite"
+            ></span>
+          </button>
+          <div
+            class="ra-notif__panel"
+            id="ra-notif-panel-map"
+            data-ra-notif-panel
+            role="region"
+            aria-label="Notifications"
+            hidden
+          >
+            <div class="ra-notif__panel-head">
+              <h2 class="ra-notif__panel-title">Notifications</h2>
+              <button
+                type="button"
+                class="ra-notif__mark-all"
+                data-ra-notif-mark-all
+              >
+                Mark all read
+              </button>
+            </div>
+            <p class="ra-notif__loading" data-ra-notif-loading hidden>
+              Loading…
+            </p>
+            <p
+              class="ra-notif__error"
+              data-ra-notif-error
+              role="alert"
+              hidden
+            ></p>
+            <p class="ra-notif__empty" data-ra-notif-empty hidden>
+              No notifications yet.
+            </p>
+            <ul class="ra-notif__list" data-ra-notif-list></ul>
+          </div>
+        </div>
         <button type="button" class="icon-btn" aria-label="Settings">
           ⚙️
         </button>
@@ -302,6 +357,7 @@
       crossorigin=""
     ></script>
     <script src="../js/auth.js"></script>
+    <script src="../js/notifications-panel.js"></script>
     <script src="dashboard.js"></script>
   </body>
 </html>
