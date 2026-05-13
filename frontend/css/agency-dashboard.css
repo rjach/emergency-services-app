@@ -515,6 +515,67 @@
   background: var(--agency-assign-hover);
 }
 
+.agency-card__btn--deny {
+  background: #fff;
+  color: var(--agency-text);
+  border: 1px solid rgba(185, 28, 28, 0.35);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.agency-card__btn--deny:hover {
+  background: rgba(254, 226, 226, 0.5);
+  border-color: rgba(185, 28, 28, 0.5);
+}
+
+.agency-card--urgent .agency-card__btn--deny {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.agency-card__btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: none;
+}
+
+.agency-status-sub {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--agency-text-muted);
+}
+
+.agency-table-empty {
+  padding: 2rem 1.5rem;
+  text-align: center;
+  color: var(--agency-text-muted);
+  font-size: 0.875rem;
+}
+
+.agency-table-muted {
+  font-size: 0.8125rem;
+  color: var(--agency-text-muted);
+}
+
+.agency-table-inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.agency-table-action-sep {
+  color: var(--agency-border-soft);
+  user-select: none;
+}
+
+.agency-link-btn--danger {
+  color: #b91c1c;
+}
+
+.agency-link-btn--danger:hover {
+  color: #991b1b;
+}
+
 /* ——— Incidents toolbar ——— */
 .agency-incidents-head {
   display: flex;
