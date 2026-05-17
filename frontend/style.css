@@ -1328,6 +1328,80 @@ body.modal-open {
   }
 }
 
+:root[data-theme="dark"] .ud-map-wrap {
+  background: #1a221c;
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(107, 156, 120, 0.22);
+  border-color: rgba(107, 156, 120, 0.24);
+}
+
+:root[data-theme="dark"] .ud-leaflet-pin-marker .ud-leaflet-pin-inner {
+  border-color: var(--bg-white);
+}
+
+:root[data-theme="dark"] .contacts-api-error {
+  background: #3f1e1e;
+  color: #fecaca;
+}
+
+:root[data-theme="dark"] .contact-avatar--a {
+  background: #2d2640;
+  color: #c4b5fd;
+}
+
+:root[data-theme="dark"] .ud-activity-dot--medical {
+  background: #7f1d1d;
+  border-color: var(--bg-white);
+}
+
+:root[data-theme="dark"] .ud-activity-dot--safe {
+  border-color: var(--bg-white);
+}
+
+:root[data-theme="dark"] .tag-completed {
+  background: rgba(107, 156, 120, 0.22);
+  color: #b8d4c0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] .ud-map-wrap {
+    background: #1a221c;
+    box-shadow:
+      0 8px 28px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(107, 156, 120, 0.22);
+    border-color: rgba(107, 156, 120, 0.24);
+  }
+
+  :root[data-theme="system"] .ud-leaflet-pin-marker .ud-leaflet-pin-inner {
+    border-color: var(--bg-white);
+  }
+
+  :root[data-theme="system"] .contacts-api-error {
+    background: #3f1e1e;
+    color: #fecaca;
+  }
+
+  :root[data-theme="system"] .contact-avatar--a {
+    background: #2d2640;
+    color: #c4b5fd;
+  }
+
+  :root[data-theme="system"] .ud-activity-dot--medical {
+    background: #7f1d1d;
+    border-color: var(--bg-white);
+  }
+
+  :root[data-theme="system"] .ud-activity-dot--safe {
+    border-color: var(--bg-white);
+  }
+
+  :root[data-theme="system"] .tag-completed {
+    background: rgba(107, 156, 120, 0.22);
+    color: #b8d4c0;
+  }
+}
+
 /* ========== Agency placeholder ========== */
 .page-agency-dash {
   min-height: 100vh;
