@@ -482,6 +482,144 @@
     profileBtn.setAttribute('aria-label', `Account, ${user.email}`);
   }
 
+  (function setupUserDashboardMap() {
+    const L = window.L;
+    const mapEl = document.getElementById('user-dashboard-map');
+    if (!mapEl || !L || typeof L.map !== 'function') return;
+
+    const DEFAULT_CENTER = [37.7749, -122.4194];
+    const DEFAULT_ZOOM = 12;
+
+    let map = null;
+    let marker = null;
+
+    function pinIcon() {
+      return L.divIcon({
+        className: 'ud-leaflet-pin-marker',
+        html:
+          '<div class="ud-leaflet-pin-inner" aria-hidden="true"></div>' +
+          '<span class="visually-hidden">Your approximate position</span>',
+        iconSize: [26, 26],
+        iconAnchor: [13, 13],
+        popupAnchor: [0, -12],
+      });
+    }
+
+    function initMap() {
+      if (map) return map;
+      map = L.map(mapEl, {
+        scrollWheelZoom: true,
+        zoomControl: true,
+      }).setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      }).addTo(map);
+
+      const inv = () => {
+        try {
+          map.invalidateSize();
+        } catch (_) {
+          /* ignore */
+        }
+      };
+      requestAnimationFrame(inv);
+      setTimeout(inv, 200);
+      setTimeout(inv, 600);
+      return map;
+    }
+
+    /**
+     * @param {number} lat
+     * @param {number} lng
+     * @param {number | null} accuracyM
+     */
+    function updateMap(lat, lng, accuracyM) {
+      initMap();
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+      if (!marker) {
+        marker = L.marker([lat, lng], {
+          icon: pinIcon(),
+          title: 'Your approximate position',
+        }).addTo(map);
+      } else {
+        marker.setLatLng([lat, lng]);
+      }
+
+      let zoom = 15;
+      if (typeof accuracyM === 'number' && Number.isFinite(accuracyM)) {
+        if (accuracyM > 250) zoom = 13;
+        else if (accuracyM > 100) zoom = 14;
+        else if (accuracyM > 35) zoom = 15;
+        else zoom = 16;
+      }
+
+      const maxZ = map.getMaxZoom ? map.getMaxZoom() : 19;
+      map.setView([lat, lng], Math.min(zoom, maxZ), { animate: true });
+      requestAnimationFrame(() => {
+        try {
+          map.invalidateSize();
+        } catch (_) {
+          /* ignore */
+        }
+      });
+    }
+
+    function resetToDefault() {
+      initMap();
+      if (marker && map.hasLayer(marker)) {
+        map.removeLayer(marker);
+        marker = null;
+      }
+      map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+      requestAnimationFrame(() => {
+        try {
+          map.invalidateSize();
+        } catch (_) {
+          /* ignore */
+        }
+      });
+    }
+
+    initMap();
+
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      if (!map) return;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        try {
+          map.invalidateSize();
+        } catch (_) {
+          /* ignore */
+        }
+      }, 150);
+    });
+
+    function recordPosition(pos) {
+      const { latitude, longitude, accuracy } = pos.coords;
+      const accM =
+        typeof accuracy === 'number' && Number.isFinite(accuracy) ? accuracy : null;
+      updateMap(latitude, longitude, accM);
+    }
+
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(recordPosition, (err) => {
+        console.warn('Geolocation error', err);
+        resetToDefault();
+      }, { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 });
+
+      navigator.geolocation.watchPosition(recordPosition, (err) => {
+        console.warn('Geolocation watch error', err);
+      }, { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 });
+    } else {
+      resetToDefault();
+    }
+  })();
+
   fetchContacts();
   fetchActivity();
 })();
