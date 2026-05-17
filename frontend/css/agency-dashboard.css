@@ -1151,3 +1151,240 @@ html[data-theme="dark"] .agency-header {
     border-bottom-color: var(--agency-border-soft);
   }
 }
+
+/* Surfaces still hard-coded for light — align with dark tokens */
+html[data-theme="dark"] .agency-avatar {
+  border-color: var(--agency-border);
+}
+
+html[data-theme="dark"] .agency-btn-outline {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+html[data-theme="dark"] .agency-stat-badge--alert {
+  border-color: rgba(251, 146, 60, 0.35);
+}
+
+html[data-theme="dark"] .agency-card--urgent .agency-card__location {
+  color: rgba(253, 186, 116, 0.92);
+}
+
+html[data-theme="dark"] .agency-card--urgent .agency-card__strip {
+  background: rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="dark"] .agency-card:not(.agency-card--urgent) .agency-card__strip {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+html[data-theme="dark"] .agency-card__btn--white {
+  background: var(--agency-surface-hover);
+  color: var(--agency-alert-text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark"] .agency-card__btn--white:hover {
+  background: #2a322c;
+}
+
+html[data-theme="dark"] .agency-card__btn--deny {
+  background: var(--agency-surface-hover);
+  color: var(--agency-text);
+  border-color: rgba(248, 113, 113, 0.45);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+html[data-theme="dark"] .agency-card__btn--deny:hover {
+  background: rgba(127, 29, 29, 0.35);
+  border-color: rgba(252, 165, 165, 0.45);
+}
+
+html[data-theme="dark"] .agency-card--urgent .agency-card__btn--deny {
+  background: rgba(23, 28, 24, 0.95);
+}
+
+html[data-theme="dark"] .agency-link-btn--danger {
+  color: #f87171;
+}
+
+html[data-theme="dark"] .agency-link-btn--danger:hover {
+  color: #fca5a5;
+}
+
+html[data-theme="dark"] .agency-filter-btn--active {
+  background: var(--agency-surface-hover);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark"] .agency-table thead tr {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+html[data-theme="dark"] .agency-table tbody {
+  background: rgba(0, 0, 0, 0.18);
+}
+
+html[data-theme="dark"] .agency-loc-thumb {
+  border-color: var(--agency-border);
+}
+
+html[data-theme="dark"] .agency-loc-placeholder {
+  background: #3d4540;
+  border-color: var(--agency-border);
+}
+
+html[data-theme="dark"] .agency-loc-placeholder .material-symbols-outlined {
+  color: var(--agency-text-muted);
+}
+
+html[data-theme="dark"] .agency-status--resolved {
+  background: #2d3830;
+  color: var(--agency-text-muted);
+}
+
+html[data-theme="dark"] .agency-status--pending {
+  border-color: rgba(251, 146, 60, 0.35);
+}
+
+html[data-theme="dark"] .agency-status-dot--gray {
+  background: #6b7280;
+}
+
+html[data-theme="dark"] .agency-panel__footer {
+  background: rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="dark"] .agency-modal-backdrop {
+  background: rgba(0, 0, 0, 0.62);
+}
+
+html[data-theme="dark"] .agency-api-error {
+  color: #f87171;
+}
+
+html[data-theme="dark"] .agency-card__btn--gray {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .agency-card__btn--gray:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"] .agency-avatar {
+    border-color: var(--agency-border);
+  }
+
+  html[data-theme="system"] .agency-btn-outline {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  html[data-theme="system"] .agency-stat-badge--alert {
+    border-color: rgba(251, 146, 60, 0.35);
+  }
+
+  html[data-theme="system"] .agency-card--urgent .agency-card__location {
+    color: rgba(253, 186, 116, 0.92);
+  }
+
+  html[data-theme="system"] .agency-card--urgent .agency-card__strip {
+    background: rgba(0, 0, 0, 0.22);
+  }
+
+  html[data-theme="system"] .agency-card:not(.agency-card--urgent) .agency-card__strip {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  html[data-theme="system"] .agency-card__btn--white {
+    background: var(--agency-surface-hover);
+    color: var(--agency-alert-text);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  }
+
+  html[data-theme="system"] .agency-card__btn--white:hover {
+    background: #2a322c;
+  }
+
+  html[data-theme="system"] .agency-card__btn--deny {
+    background: var(--agency-surface-hover);
+    color: var(--agency-text);
+    border-color: rgba(248, 113, 113, 0.45);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  html[data-theme="system"] .agency-card__btn--deny:hover {
+    background: rgba(127, 29, 29, 0.35);
+    border-color: rgba(252, 165, 165, 0.45);
+  }
+
+  html[data-theme="system"] .agency-card--urgent .agency-card__btn--deny {
+    background: rgba(23, 28, 24, 0.95);
+  }
+
+  html[data-theme="system"] .agency-link-btn--danger {
+    color: #f87171;
+  }
+
+  html[data-theme="system"] .agency-link-btn--danger:hover {
+    color: #fca5a5;
+  }
+
+  html[data-theme="system"] .agency-filter-btn--active {
+    background: var(--agency-surface-hover);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  }
+
+  html[data-theme="system"] .agency-table thead tr {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  html[data-theme="system"] .agency-table tbody {
+    background: rgba(0, 0, 0, 0.18);
+  }
+
+  html[data-theme="system"] .agency-loc-thumb {
+    border-color: var(--agency-border);
+  }
+
+  html[data-theme="system"] .agency-loc-placeholder {
+    background: #3d4540;
+    border-color: var(--agency-border);
+  }
+
+  html[data-theme="system"] .agency-loc-placeholder .material-symbols-outlined {
+    color: var(--agency-text-muted);
+  }
+
+  html[data-theme="system"] .agency-status--resolved {
+    background: #2d3830;
+    color: var(--agency-text-muted);
+  }
+
+  html[data-theme="system"] .agency-status--pending {
+    border-color: rgba(251, 146, 60, 0.35);
+  }
+
+  html[data-theme="system"] .agency-status-dot--gray {
+    background: #6b7280;
+  }
+
+  html[data-theme="system"] .agency-panel__footer {
+    background: rgba(0, 0, 0, 0.22);
+  }
+
+  html[data-theme="system"] .agency-modal-backdrop {
+    background: rgba(0, 0, 0, 0.62);
+  }
+
+  html[data-theme="system"] .agency-api-error {
+    color: #f87171;
+  }
+
+  html[data-theme="system"] .agency-card__btn--gray {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  html[data-theme="system"] .agency-card__btn--gray:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
