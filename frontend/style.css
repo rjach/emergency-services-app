@@ -1,5 +1,6 @@
 /* ========== Tokens ========== */
 :root {
+  color-scheme: light;
   --green-primary: #4a7c59;
   --green-primary-dark: #3d684a;
   --green-soft: #e8f0ea;
@@ -12,6 +13,12 @@
   --border: #e2e4df;
   --purple-add-bg: #f3e8ff;
   --purple-add-text: #6b21a8;
+  --input-bg: #fafaf8;
+  --segmented-bg: #eef1ec;
+  --segmented-sub-bg: #f4f5f2;
+  --hero-blob-mid: #dce8dd;
+  --contacts-card-bg: #eceee9;
+  --icon-muted: #8a928c;
   --radius: 14px;
   --radius-sm: 10px;
   --font: "Inter", system-ui, sans-serif;
@@ -90,7 +97,7 @@ body.modal-open {
   right: -5%;
   width: 48%;
   height: 48%;
-  background: #dce8dd;
+  background: var(--hero-blob-mid);
 }
 
 .login-main {
@@ -130,14 +137,14 @@ body.modal-open {
 .segmented {
   display: flex;
   padding: 0.25rem;
-  background: #eef1ec;
+  background: var(--segmented-bg);
   border-radius: 12px;
   margin-bottom: 1rem;
   gap: 0.25rem;
 }
 
 .segmented-sub {
-  background: #f4f5f2;
+  background: var(--segmented-sub-bg);
   margin-bottom: 1.25rem;
 }
 
@@ -255,7 +262,7 @@ body.modal-open {
   left: 0.9rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #8a928c;
+  color: var(--icon-muted);
   font-size: 1.2rem;
   pointer-events: none;
 }
@@ -265,9 +272,10 @@ body.modal-open {
   padding: 0.8rem 1rem 0.8rem 2.85rem;
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: #fafaf8;
+  background: var(--input-bg);
   font-family: inherit;
   font-size: 0.95rem;
+  color: var(--text);
 }
 
 .input:focus {
@@ -282,6 +290,7 @@ body.modal-open {
 
 .input-select {
   appearance: none;
+  background-color: var(--input-bg);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='%235c6560'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
@@ -296,7 +305,7 @@ body.modal-open {
   background: none;
   padding: 0.25rem;
   cursor: pointer;
-  color: #8a928c;
+  color: var(--icon-muted);
   display: flex;
   border-radius: 6px;
 }
@@ -559,7 +568,7 @@ body.modal-open {
 }
 
 .ud-contacts-card {
-  background: #eceee9;
+  background: var(--contacts-card-bg);
 }
 
 .ud-card-head {
@@ -1141,6 +1150,184 @@ body.modal-open {
 
 .btn-modal-primary:hover {
   background: var(--green-primary-dark);
+}
+
+.btn-modal-primary:disabled,
+.btn-modal-secondary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-modal-primary:disabled:hover {
+  background: var(--green-primary);
+}
+
+.theme-toggle--floating {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 60;
+}
+
+/* Dark + system (prefers dark) themes for auth & user dashboard */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --green-primary: #6b9c78;
+  --green-primary-dark: #558763;
+  --green-soft: #1a2620;
+  --green-muted: #8aa892;
+  --bg-page: #0f1411;
+  --bg-card: #171d19;
+  --bg-white: #1e2520;
+  --text: #e8ebe9;
+  --text-muted: #9aaa9f;
+  --border: #2d3830;
+  --purple-add-bg: #2a1f35;
+  --purple-add-text: #d8b4fe;
+  --input-bg: #252d27;
+  --segmented-bg: #252b26;
+  --segmented-sub-bg: #1f2521;
+  --hero-blob-mid: #1a2820;
+  --contacts-card-bg: #1a221c;
+  --icon-muted: #8a9a8e;
+  --shadow: 0 4px 28px rgba(0, 0, 0, 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    color-scheme: dark;
+    --green-primary: #6b9c78;
+    --green-primary-dark: #558763;
+    --green-soft: #1a2620;
+    --green-muted: #8aa892;
+    --bg-page: #0f1411;
+    --bg-card: #171d19;
+    --bg-white: #1e2520;
+    --text: #e8ebe9;
+    --text-muted: #9aaa9f;
+    --border: #2d3830;
+    --purple-add-bg: #2a1f35;
+    --purple-add-text: #d8b4fe;
+    --input-bg: #252d27;
+    --segmented-bg: #252b26;
+    --segmented-sub-bg: #1f2521;
+    --hero-blob-mid: #1a2820;
+    --contacts-card-bg: #1a221c;
+    --icon-muted: #8a9a8e;
+    --shadow: 0 4px 28px rgba(0, 0, 0, 0.45);
+  }
+}
+
+:root[data-theme="dark"] .input-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='%239aaa9f'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] .input-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='%239aaa9f'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  }
+}
+
+:root[data-theme="dark"] .auth-error {
+  background: #3f1e1e;
+  color: #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] .auth-error {
+    background: #3f1e1e;
+    color: #fecaca;
+  }
+}
+
+:root[data-theme="dark"] .contacts-api-error {
+  background: #3f1e1e;
+  color: #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] .contacts-api-error {
+    background: #3f1e1e;
+    color: #fecaca;
+  }
+}
+
+:root[data-theme="dark"] .modal-backdrop {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] .modal-backdrop {
+    background: rgba(0, 0, 0, 0.65);
+  }
+}
+
+:root[data-theme="dark"] .input-dash {
+  background: var(--input-bg);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] .input-dash {
+    background: var(--input-bg);
+    color: var(--text);
+    border-color: var(--border);
+  }
+}
+
+:root[data-theme="dark"] .switch {
+  background: #3d4540;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] .switch {
+    background: #3d4540;
+  }
+}
+
+:root[data-theme="dark"] .tag-resolved {
+  background: #2a302c;
+  color: #cbd5d1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] .tag-resolved {
+    background: #2a302c;
+    color: #cbd5d1;
+  }
+}
+
+:root[data-theme="dark"] .tag-auto {
+  background: #3a3020;
+  color: #fcd34d;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] .tag-auto {
+    background: #3a3020;
+    color: #fcd34d;
+  }
+}
+
+:root[data-theme="dark"] .ud-activity-dot--check {
+  background: #3d4540;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] .ud-activity-dot--check {
+    background: #3d4540;
+  }
+}
+
+:root[data-theme="dark"] .ud-activity-quote {
+  border-left-color: var(--border);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] .ud-activity-quote {
+    border-left-color: var(--border);
+  }
 }
 
 /* ========== Agency placeholder ========== */

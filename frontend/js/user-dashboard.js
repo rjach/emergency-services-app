@@ -41,6 +41,7 @@
     fieldPhone: document.getElementById('contact-phone'),
     fieldRelationship: document.getElementById('contact-relationship'),
     fieldNotify: document.getElementById('contact-notify'),
+    btnContactSave: document.getElementById('btn-contact-save'),
     btnLogout: document.getElementById('btn-logout'),
     logoutModal: document.getElementById('logout-modal-root'),
     logoutConfirm: document.getElementById('logout-confirm-btn'),
@@ -48,6 +49,12 @@
 
   let editingId = null;
   let deleteInProgress = false;
+
+  function setContactSaveBusy(busy) {
+    if (!els.btnContactSave) return;
+    els.btnContactSave.disabled = Boolean(busy);
+    els.btnContactSave.setAttribute('aria-busy', busy ? 'true' : 'false');
+  }
 
   function setContactsError(msg) {
     if (!msg) {
@@ -111,6 +118,7 @@
       editingId = null;
     }
     els.fieldName.focus();
+    setContactSaveBusy(false);
   }
 
   function closeModal() {
@@ -122,6 +130,7 @@
     editingId = null;
     els.form.reset();
     els.fieldId.value = '';
+    setContactSaveBusy(false);
   }
 
   function openLogoutModal() {
@@ -285,7 +294,7 @@
     openModal(true);
   }
 
-   els.form.addEventListener('submit', async (e) => {
+  els.form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = els.fieldName.value.trim();
     const phone = els.fieldPhone.value.trim();
@@ -302,41 +311,46 @@
 
     setContactsError('');
 
-    if (editingId) {
-      const { ok, data, status } = await A.api(
-        `/user/contacts/${encodeURIComponent(editingId)}`,
-        {
-          method: 'PATCH',
-          body: JSON.stringify({ name, phone: phoneValidation.cleanedPhone, relationship, notifyOnAlert }),
+    setContactSaveBusy(true);
+    try {
+      if (editingId) {
+        const { ok, data, status } = await A.api(
+          `/user/contacts/${encodeURIComponent(editingId)}`,
+          {
+            method: 'PATCH',
+            body: JSON.stringify({ name, phone: phoneValidation.cleanedPhone, relationship, notifyOnAlert }),
+          }
+        );
+        if (status === 401 || status === 403) {
+          A.clearSession();
+          A.redirectToLogin();
+          return;
         }
-      );
-      if (status === 401 || status === 403) {
-        A.clearSession();
-        A.redirectToLogin();
-        return;
+        if (!ok) {
+          setContactsError(data.message || 'Could not save contact.');
+          return;
+        }
+      } else {
+        const { ok, data, status } = await A.api('/user/contacts', {
+          method: 'POST',
+          body: JSON.stringify({ name, phone: phoneValidation.cleanedPhone, relationship, notifyOnAlert }),
+        });
+        if (status === 401 || status === 403) {
+          A.clearSession();
+          A.redirectToLogin();
+          return;
+        }
+        if (!ok) {
+          setContactsError(data.message || 'Could not create contact.');
+          return;
+        }
       }
-      if (!ok) {
-        setContactsError(data.message || 'Could not save contact.');
-        return;
-      }
-    } else {
-      const { ok, data, status } = await A.api('/user/contacts', {
-        method: 'POST',
-        body: JSON.stringify({ name, phone: phoneValidation.cleanedPhone, relationship, notifyOnAlert }),
-      });
-      if (status === 401 || status === 403) {
-        A.clearSession();
-        A.redirectToLogin();
-        return;
-      }
-      if (!ok) {
-        setContactsError(data.message || 'Could not create contact.');
-        return;
-      }
-    }
 
-    closeModal();
-    await fetchContacts();
+      closeModal();
+      await fetchContacts();
+    } finally {
+      setContactSaveBusy(false);
+    }
   });
 
   els.btnAdd.addEventListener('click', () => openModal(false));

@@ -3,6 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        try {
+          var k = 'rapidaid-theme',
+            t = localStorage.getItem(k);
+          if (t !== 'light' && t !== 'dark' && t !== 'system') t = 'system';
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'system');
+        }
+      })();
+    </script>
     <meta name="api-base" content="https://api.rapidaid.rojanacharya.com" />
     <title>RapidAid — Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,10 +41,19 @@
             aria-current="page"
             >Dashboard</a
           >
-          <a href="./agency-dashboard.html" class="ud-nav-link">Agency</a>
         </nav>
       </div>
       <div class="ud-header-right">
+        <button
+          type="button"
+          class="ud-icon-btn"
+          data-theme-cycle
+          aria-label="Color theme"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true"
+            >brightness_auto</span
+          >
+        </button>
         <div class="ra-notif" data-ra-notifications>
           <button
             type="button"
@@ -204,7 +225,6 @@
       <nav class="ud-footer-nav">
         <a href="#">Privacy</a>
         <a href="#">Terms</a>
-        <a href="./agency-dashboard.html">Agency Portal</a>
         <a href="#">Contact</a>
       </nav>
       <p class="ud-footer-copy">© 2026 RapidAid. The Serene Guardian.</p>
@@ -285,7 +305,11 @@
             >
               Cancel
             </button>
-            <button type="submit" class="btn-modal-primary">
+            <button
+              type="submit"
+              class="btn-modal-primary"
+              id="btn-contact-save"
+            >
               Save contact
             </button>
           </div>
@@ -335,6 +359,7 @@
       </div>
     </div>
 
+    <script src="./js/theme.js"></script>
     <script src="./js/auth.js"></script>
     <script src="./js/notifications-panel.js"></script>
     <script src="./js/user-dashboard.js"></script>
