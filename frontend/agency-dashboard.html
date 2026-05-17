@@ -3,6 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        try {
+          var k = 'rapidaid-theme',
+            t = localStorage.getItem(k);
+          if (t !== 'light' && t !== 'dark' && t !== 'system') t = 'system';
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'system');
+        }
+      })();
+    </script>
     <meta name="api-base" content="https://api.rapidaid.rojanacharya.com" />
     <title>RapidAid — Agency Command Center</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -33,6 +45,16 @@
           </nav>
         </div>
         <div class="agency-header__actions">
+          <button
+            type="button"
+            class="agency-theme-btn"
+            data-theme-cycle
+            aria-label="Color theme"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true"
+              >brightness_auto</span
+            >
+          </button>
           <div class="ra-notif" data-ra-notifications>
             <button
               type="button"
@@ -327,6 +349,7 @@
       </div>
     </div>
 
+    <script src="./js/theme.js"></script>
     <script src="./js/auth.js"></script>
     <script src="./js/notifications-panel.js"></script>
     <script src="./js/agency-dashboard.js"></script>

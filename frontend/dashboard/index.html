@@ -3,6 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        try {
+          var k = 'rapidaid-theme',
+            t = localStorage.getItem(k);
+          if (t !== 'light' && t !== 'dark' && t !== 'system') t = 'system';
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'system');
+        }
+      })();
+    </script>
     <meta name="api-base" content="https://api.rapidaid.rojanacharya.com" />
     <title>RapidAid Dashboard</title>
     <link
@@ -38,6 +50,16 @@
         <a href="../agency-dashboard.html">Agency console</a>
       </nav>
       <div class="header-actions">
+        <button
+          type="button"
+          class="btn-theme-map"
+          data-theme-cycle
+          aria-label="Color theme"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true"
+            >brightness_auto</span
+          >
+        </button>
         <button type="button" class="btn-login" id="btn-dashboard-login">
           Login
         </button>
@@ -356,6 +378,7 @@
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
+    <script src="../js/theme.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/notifications-panel.js"></script>
     <script src="dashboard.js"></script>
